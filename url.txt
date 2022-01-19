@@ -1,0 +1,3 @@
+https://groupgets.com/blog/posts/8-installation-guide-for-pure-breakout-board-on-raspberry-pi-2
+
+https://github.com/groupgets/pylepton/issues/52

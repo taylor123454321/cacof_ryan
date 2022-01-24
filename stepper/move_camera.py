@@ -20,7 +20,7 @@ def init():
     #Spin stepper
     print("Attempting stepper init spin")
     for i in range(50):
-        kit.stepper1.onestep(direction, style=stepper.MICROSTEP)
+        kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
         time.sleep(0.01)
     #Tilt servo
     print("Attempting servo init tilt")
@@ -67,12 +67,10 @@ def tilt(error):
 
     if error > 1:
         error = 1
-        print("Error clipped high")
-        print(error)
+        print("Error clipped high, {error}")
     elif error < -1:
         error = -1
-        print("Error clipped low")
-        print(error)
+        print("Error clipped low, {error}")
 
     if (CENTER + error) > MAX or (CENTER + error) < MIN:
         error = 0

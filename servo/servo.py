@@ -12,7 +12,7 @@ p.start(6) # Initialization
 delay = 2
 try:
   while True:
-    p.ChangeDutyCycle(5)
+    p.ChangeDutyCycle(4)
     time.sleep(delay)
 
     #p.ChangeDutyCycle(12)

@@ -10,7 +10,7 @@ kit = MotorKit(i2c=board.I2C())
 error_angle = 0
 
 """Init for GPIO for servo/tilt"""
-servoPIN = 17
+servoPIN = 17 #pin 11 on RPI
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(servoPIN, GPIO.OUT)
 p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
@@ -23,22 +23,23 @@ def init():
         kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
         time.sleep(0.01)
     #Tilt servo
+    time.sleep(2)
     print("Attempting servo init tilt")
-    p.start(6)  # Initialization
-    time.sleep(0.5)
-    p.start(4)
-    time.sleep(0.5)
-    p.start(8)
-    time.sleep(0.5)
+    p.start(6.5)  # Initialization
+    time.sleep(2)
     p.start(6)
-    time.sleep(0.5)
+    time.sleep(2)
+    p.start(7)
+    time.sleep(2)
+    p.start(6.5)
+    time.sleep(2)
 
 
 def rotate(error):
-    if error <= 0:
-        direction = stepper.BACKWARD
+    if error <= 0: #forward
+        direct = 0
     else:
-        direction = stepper.FORWARD
+        direct = 1 #backwards
 
     error = abs(error)
     if error > 10:
@@ -46,17 +47,22 @@ def rotate(error):
     print(error)
 
     if error > 2:
-        for i in range(error):
-            kit.stepper1.onestep(direction, style=stepper.MICROSTEP)
-            time.sleep(0.01)
+        if error == 0:
+            for i in range(error):
+                kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
+                time.sleep(0.01)
+        elif error == 1:
+            for i in range(error):
+                kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
+                time.sleep(0.01)
     else:
         print("Too small to rotate")
 
 
 def tilt(error):
-    MAX = 7
-    CENTER = 5
-    MIN = 3
+    MAX = 8
+    CENTER = 5.5
+    MIN = 4.5
     pixel_to_PWM_ratio = 10 #0.1 PWM to 10 pixels guess
 
     print("Tilt error unaltered")
@@ -85,9 +91,16 @@ def tilt(error):
 
 def rotate_idle():
     search_step = 20
-    for i in range(search_step):
-        kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
-        time.sleep(0.01)
+    direct = 0
+    
+    if direct <= 0:
+        for i in range(search_step):
+            kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
+            time.sleep(0.01)
+    else:
+        for i in range(search_step):
+            kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
+            time.sleep(0.01)
     time.sleep(0.2)
     print("Searching")
 
@@ -108,6 +121,7 @@ try:
             rotate(error_hor_angle)
             tilt(error_vert_angle)
 except KeyboardInterrupt:
+    p.start(6.5)
     p.stop()
     GPIO.cleanup()
     kit.stepper1.release()

@@ -6,7 +6,7 @@ from adafruit_motorkit import MotorKit
 import RPi.GPIO as GPIO
 
 """Init for stepper motor"""
-kit = MotorKit(i2c=board.I2C())
+
 error_angle = 0
 
 """Init for GPIO for servo/tilt"""
@@ -18,12 +18,14 @@ p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
 
 def init():
     #Spin stepper
+    kit = MotorKit(i2c=board.I2C())
     print("Attempting stepper init spin")
     for i in range(50):
         kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
-        time.sleep(0.01)
+        #time.sleep(0.01)
+    kit.stepper1.release()
     #Tilt servo
-    time.sleep(2)
+    """time.sleep(2)
     print("Attempting servo init tilt")
     p.start(6.5)  # Initialization
     time.sleep(2)
@@ -32,7 +34,7 @@ def init():
     p.start(7)
     time.sleep(2)
     p.start(6.5)
-    time.sleep(2)
+    time.sleep(2)"""
 
 
 def rotate(error):
@@ -90,23 +92,25 @@ def tilt(error):
 
 
 def rotate_idle():
-    search_step = 20
+    search_step = 400
     direct = 0
-    
+    kit = MotorKit(i2c=board.I2C())
     if direct <= 0:
         for i in range(search_step):
             kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
-            time.sleep(0.01)
+            #time.sleep(0.01)
     else:
         for i in range(search_step):
             kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
-            time.sleep(0.01)
-    time.sleep(0.2)
-    print("Searching")
+            #time.sleep(0.01)
+    #time.sleep(4)
+    kit.stepper1.release()
 
 
 def check_found():
     check_d_bus = 0
+    time.sleep(4)
+    print("Searching, Read DBUS")
     return check_d_bus, 25, 8
 
 
@@ -124,4 +128,4 @@ except KeyboardInterrupt:
     p.start(6.5)
     p.stop()
     GPIO.cleanup()
-    kit.stepper1.release()
+    #kit.stepper1.release()

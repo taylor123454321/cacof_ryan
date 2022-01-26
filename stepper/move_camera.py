@@ -5,26 +5,33 @@ from adafruit_motor import stepper
 from adafruit_motorkit import MotorKit
 import RPi.GPIO as GPIO
 
-"""Init for stepper motor"""
-
 error_angle = 0
 
 """Init for GPIO for servo/tilt"""
-servoPIN = 17 #pin 11 on RPI
+servoPIN = 17  # pin 11 on RPI
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(servoPIN, GPIO.OUT)
-p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
+p = GPIO.PWM(servoPIN, 50)  # GPIO 17 for PWM with 50Hz
+
+def stepper_spin(steps, direct): """Function to control stepper motor"""
+    kit = MotorKit(i2c=board.I2C()) #Init stepper
+    if direct <= 0:
+        for i in range(steps):
+            kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
+            # time.sleep(0.01)
+    else:
+        for i in range(steps):
+            kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
+            # time.sleep(0.01)
+    # time.sleep(4)
+    kit.stepper1.release() #Close stepper or else it makes noise
 
 
 def init():
-    #Spin stepper
-    kit = MotorKit(i2c=board.I2C())
+    # Spin stepper
     print("Attempting stepper init spin")
-    for i in range(50):
-        kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
-        #time.sleep(0.01)
-    kit.stepper1.release()
-    #Tilt servo
+    stepper_spin(50,0)
+    # Tilt servo
     """time.sleep(2)
     print("Attempting servo init tilt")
     p.start(6.5)  # Initialization
@@ -37,26 +44,19 @@ def init():
     time.sleep(2)"""
 
 
-def rotate(error):
-    if error <= 0: #forward
-        direct = 0
+def rotate_to_target(error):
+    if error <= 0:  # forward
+        direction = 0
     else:
-        direct = 1 #backwards
+        direction = 1  # backwards
 
     error = abs(error)
     if error > 10:
         error = 10
-    print(error)
+    print("Rotate error = {error}")
 
     if error > 2:
-        if error == 0:
-            for i in range(error):
-                kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
-                time.sleep(0.01)
-        elif error == 1:
-            for i in range(error):
-                kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
-                time.sleep(0.01)
+        stepper_spin(error, direction)
     else:
         print("Too small to rotate")
 
@@ -65,11 +65,11 @@ def tilt(error):
     MAX = 8
     CENTER = 5.5
     MIN = 4.5
-    pixel_to_PWM_ratio = 10 #0.1 PWM to 10 pixels guess
+    pixel_to_PWM_ratio = 10  # 0.1 PWM to 10 pixels guess
 
     print("Tilt error unaltered")
     print(error)
-    error = pixel_to_PWM_ratio*error
+    error = pixel_to_PWM_ratio * error
     print("Tilt error altered")
     print(error)
 
@@ -93,18 +93,8 @@ def tilt(error):
 
 def rotate_idle():
     search_step = 400
-    direct = 0
-    kit = MotorKit(i2c=board.I2C())
-    if direct <= 0:
-        for i in range(search_step):
-            kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
-            #time.sleep(0.01)
-    else:
-        for i in range(search_step):
-            kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
-            #time.sleep(0.01)
-    #time.sleep(4)
-    kit.stepper1.release()
+    direction = 0
+    stepper_spin(search_step, direction)
 
 
 def check_found():
@@ -122,10 +112,10 @@ try:
         if status == 0:
             rotate_idle()
         else:
-            rotate(error_hor_angle)
+            rotate_to_target(error_hor_angle)
             tilt(error_vert_angle)
 except KeyboardInterrupt:
     p.start(6.5)
     p.stop()
     GPIO.cleanup()
-    #kit.stepper1.release()
+    # kit.stepper1.release()

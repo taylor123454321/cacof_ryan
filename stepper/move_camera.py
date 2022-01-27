@@ -13,7 +13,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(servoPIN, GPIO.OUT)
 p = GPIO.PWM(servoPIN, 50)  # GPIO 17 for PWM with 50Hz
 
-def stepper_spin(steps, direct): """Function to control stepper motor"""
+def stepper_spin(steps, direct): #"""Function to control stepper motor"""
     kit = MotorKit(i2c=board.I2C()) #Init stepper
     if direct <= 0:
         for i in range(steps):
@@ -92,8 +92,8 @@ def tilt(error):
 
 
 def rotate_idle():
-    search_step = 400
-    direction = 0
+    search_step = 400 #10 terns = half rotation, 2 turns = 11s
+    direction = 0 #Camera overlap
     stepper_spin(search_step, direction)
 
 

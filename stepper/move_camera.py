@@ -3,15 +3,21 @@ import time
 import board
 from adafruit_motor import stepper
 from adafruit_motorkit import MotorKit
-import RPi.GPIO as GPIO
+import pigpio 
 
 error_angle = 0
 
+MIN_PW = 1100#1000
+MID_PW = 1300
+MAX_PW = 1500#2000
+
 """Init for GPIO for servo/tilt"""
 servoPIN = 17  # pin 11 on RPI
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(servoPIN, GPIO.OUT)
-p = GPIO.PWM(servoPIN, 50)  # GPIO 17 for PWM with 50Hz
+pi = pigpio.pi()
+pulsewidth = MID_PW
+pi.set_servo_pulsewidth(servoPIN, pulsewidth)
+
+
 
 def stepper_spin(steps, direct): #"""Function to control stepper motor"""
     kit = MotorKit(i2c=board.I2C()) #Init stepper
@@ -32,16 +38,16 @@ def init():
     print("Attempting stepper init spin")
     stepper_spin(50,0)
     # Tilt servo
-    """time.sleep(2)
+    time.sleep(2)
     print("Attempting servo init tilt")
-    p.start(6.5)  # Initialization
+    pi.set_servo_pulsewidth(servoPIN, MID_PW)
     time.sleep(2)
-    p.start(6)
+    pi.set_servo_pulsewidth(servoPIN, MIN_PW)
     time.sleep(2)
-    p.start(7)
+    pi.set_servo_pulsewidth(servoPIN, MAX_PW)
     time.sleep(2)
-    p.start(6.5)
-    time.sleep(2)"""
+    pi.set_servo_pulsewidth(servoPIN, MID_PW)
+    time.sleep(2)
 
 
 def rotate_to_target(error):
@@ -115,7 +121,5 @@ try:
             rotate_to_target(error_hor_angle)
             tilt(error_vert_angle)
 except KeyboardInterrupt:
-    p.start(6.5)
-    p.stop()
-    GPIO.cleanup()
+    pi.stop()
     # kit.stepper1.release()

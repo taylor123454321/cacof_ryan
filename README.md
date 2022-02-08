@@ -3,7 +3,7 @@
 Installs
 sudo pip3 install adafruit-circuitpython-motorkit
 sudo apt-get install pigpio python-pigpio python3-pigpio
-pip3 install opencv-python
+sudo apt-get install python3-opencv
 
 Run on start up
 

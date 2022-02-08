@@ -180,19 +180,21 @@ def record_video():
     if ret:
         # Write the frame into the file 'output.avi'
         out.write(frame)
+        print("Recording video")
 
 
 try:
     init()
     while 1:
         print(status)
+        status = 1
 
         if status == 0:
             rotate_idle()
         else:  # Pest has been found, aim at target and record video
             error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
             # error_vert_angle = 0
-            rotate_to_target(error_hor_angle)
+            #rotate_to_target(error_hor_angle)
             # tilt(error_vert_angle)
             record_video()
 except KeyboardInterrupt:

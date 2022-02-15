@@ -6,8 +6,10 @@ https://github.com/groupgets/pylepton/issues/52
 If you ssh onto the pi and go into /home/pi/classifier-pipeline directory, 
 then run 'git checkout signals'
 
-I have added a script https://github.com/TheCacophonyProject/classifier-pipeline/blob/signals/dbustest.py which sets up the dbus signals and receives tracking events in"catchall_tracking_signals_handler" method .
+I have added a script https://github.com/TheCacophonyProject/classifier-pipeline/blob/signals/dbustest.py 
+which sets up the dbus signals and receives tracking events in"catchall_tracking_signals_handler" method .
 
- Let me know if that all makes sense, may need to add some more events for you? Like when it has stopped tracking a track?
+ Let me know if that all makes sense, may need to add some more events for you? 
+Like when it has stopped tracking a track?
 
-GP
+GP a

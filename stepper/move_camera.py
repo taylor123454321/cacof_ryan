@@ -22,7 +22,7 @@ pi.set_servo_pulsewidth(servoPIN, pulsewidth)
 
 """Init for DBUS"""
 # Take in a single optional integral argument
-# import sys
+import sys
 
 DBUS_NAME = "org.cacophony.thermalrecorder"
 DBUS_PATH = "/org/cacophony/thermalrecorder"
@@ -31,6 +31,13 @@ from gi.repository import GLib
 
 import dbus
 import dbus.mainloop.glib
+
+
+def catchall_tracking_signals_handler(what, region):
+    print("Received a tracking signal and it says " + what, region)
+    status = 1
+    region_global = region
+
 
 global object
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
@@ -59,7 +66,7 @@ def stepper_spin(steps, direct):  # Function to control stepper motor
         for i in range(steps):
             kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
             # time.sleep(0.01)
-    # time.sleep(4)
+    time.sleep(4)
     kit.stepper1.release()  # Close stepper or else it makes noise
 
 
@@ -127,14 +134,8 @@ def tilt(error):
         print("Too small to tilt")
 
 
-def catchall_tracking_signals_handler(what, region):
-    print("Received a tracking signal and it says " + what, region)
-    status = 1
-    region_global = region
-
-
 def rotate_idle():
-    search_step = 400  # 10 terns = half rotation, 2 turns = 11s
+    search_step = 50  # 10 terns = half rotation, 2 turns = 11s
     direction = 0  # Camera overlap
     stepper_spin(search_step, direction)
 
@@ -149,8 +150,9 @@ def calculate_error(region):
 
 try:
     init()
+    loops = 0
     while 1:
-        print(status)
+        print(status, loops)
 
         if status == 0:
             rotate_idle()
@@ -159,6 +161,7 @@ try:
             # error_vert_angle = 0
             rotate_to_target(error_hor_angle)
             # tilt(error_vert_angle)
+        loops += 1
 except KeyboardInterrupt:
     pi.stop()
     # kit.stepper1.release()

@@ -6,8 +6,11 @@ sudo apt-get install pigpio python-pigpio python3-pigpio
 sudo apt-get install python3-opencv
 
 Run on start up
-
 sudo pigpiod
+
+
+Restart camera AI software
+sudo systemctl restart classifier.service
 
 
 Mac SSH commands

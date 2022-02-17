@@ -73,14 +73,14 @@ def handler(sender=None):
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
     print(
-        "Received a trackng signal and it says " + what,
+        "Received a trackng signal," + what,
         confidence,
         "% at ",
         region,
         " tracking?",
         tracking,
     )
-    status = 1
+    status = tracking
     region_global = region
     
     
@@ -207,10 +207,11 @@ try:
     init()
     while 1:
         print(status)
-        status = 0
+        #status = 0
 
         if status == 0:
-            rotate_idle()
+            #rotate_idle()
+            print("Rotating")
         else:  # Pest has been found, aim at target and record video
             #error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
             # error_vert_angle = 0

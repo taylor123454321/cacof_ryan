@@ -1,10 +1,11 @@
 """Program to turn turret in search of a hot object and then to track"""
+print("Imports started")
 import time
 import board
 
 """Stepper motor library import"""
 from adafruit_motor import stepper
-from adafruit_motorkit import MotorKit
+from adafruit_motorkit import MotorKit 
 
 """Servo library import"""
 import pigpio
@@ -26,6 +27,8 @@ from gi.repository import GLib
 import dbus
 import dbus.mainloop.glib
 
+print("Imports finished")
+
 error_angle = 0
 
 MIN_PW = 1100
@@ -37,13 +40,16 @@ region_global = [0]*4 # Array for centroid of pest
 
 
 """Init for GPIO for servo/tilt"""
+print("Init GPIO start")
 servoPIN = 17  # pin 11 on RPI
 pi = pigpio.pi()
 pulsewidth = MID_PW
 pi.set_servo_pulsewidth(servoPIN, pulsewidth)
+print("Init GPIO finished")
 
 """OpenCV init camera"""
 # Create a VideoCapture object
+print("Init camera start")
 cap = cv2.VideoCapture(0)
 
 # Check if camera opened successfully
@@ -57,9 +63,28 @@ frame_height = int(cap.get(4))
 
 # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
 out = cv2.VideoWriter('outpy3.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
-
+print("Init camera finished")
 
 """DBUS init"""
+print("Init dbus start")
+def handler(sender=None):
+    print("got signal from %r" % sender)
+
+
+def catchall_tracking_signals_handler(what, confidence, region, tracking):
+    print(
+        "Received a trackng signal and it says " + what,
+        confidence,
+        "% at ",
+        region,
+        " tracking?",
+        tracking,
+    )
+    status = 1
+    region_global = region
+    
+    
+    
 global object
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 loop = GLib.MainLoop()
@@ -74,7 +99,8 @@ bus.add_signal_receiver(
     catchall_tracking_signals_handler,
     dbus_interface=DBUS_NAME,
     signal_name="Tracking",
-)
+    )
+print("Init dbus finshised")
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -155,12 +181,6 @@ def tilt(error):
         print("Too small to tilt")
 
 
-def catchall_tracking_signals_handler(what, region):
-    print("Received a tracking signal and it says " + what, region)
-    status = 1
-    region_global = region
-
-
 def rotate_idle():
     search_step = 400  # 10 terns = half rotation, 2 turns = 11s
     direction = 0  # Camera overlap
@@ -187,12 +207,12 @@ try:
     init()
     while 1:
         print(status)
-        status = 1
+        status = 0
 
         if status == 0:
             rotate_idle()
         else:  # Pest has been found, aim at target and record video
-            error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
+            #error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
             # error_vert_angle = 0
             #rotate_to_target(error_hor_angle)
             # tilt(error_vert_angle)

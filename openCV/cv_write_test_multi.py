@@ -1,7 +1,7 @@
 import numpy as np
-import cv2s
+import cv2
 import time
-
+cap = cv2.VideoCapture(0)
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 
@@ -12,7 +12,7 @@ def get_output(out=None):
     return cv2.VideoWriter('test' + str(time.strftime('%d %m %Y - %H %M %S' )) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 15, (frame_width, frame_height))
 
 
-cap = cv2.VideoCapture(0)
+
 next_time = time.time() + 20
 out = get_output()
 

@@ -5,7 +5,7 @@ cap = cv2.VideoCapture(0)
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 
-def get_output(out=None):
+def get_video_output(out=None):
     #Specify the path and name of the video file as well as the encoding, fps and resolution
     if out:
         out.release()
@@ -14,12 +14,12 @@ def get_output(out=None):
 
 
 next_time = time.time() + 20
-out = get_output()
+out = get_video_output()
 
 while True:
     if time.time() > next_time:
         next_time += 20
-        out = get_output(out)
+        out = get_video_output(out)
 
     # Capture frame-by-frame
     ret, frame = cap.read() 

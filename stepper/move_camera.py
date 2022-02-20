@@ -61,8 +61,6 @@ if cap.isOpened() == False:
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 
-# Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-out = cv2.VideoWriter('outpy3.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
 print("Init camera finished")
 
 """DBUS init"""
@@ -100,7 +98,7 @@ bus.add_signal_receiver(
     dbus_interface=DBUS_NAME,
     signal_name="Tracking",
     )
-print("Init dbus finshised")
+print("Init dbus finishsed")
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -120,7 +118,7 @@ def stepper_spin(steps, direct):  # Function to control stepper motor
 def init():
     # Spin stepper
     print("Attempting stepper init spin")
-    stepper_spin(50,0)
+    stepper_spin(50, 0)
     # Tilt servo
     time.sleep(2)
     print("Attempting servo init tilt")
@@ -195,7 +193,7 @@ def calculate_error(region):
     return error_hor  # , error_vert
 
 
-def record_video():
+def record_video(out):
     ret, frame = cap.read()
     if ret:
         # Write the frame into the file 'output.avi'
@@ -203,21 +201,36 @@ def record_video():
         print("Recording video")
 
 
+def get_video_output(out=None):
+    #Specify the path and name of the video file as well as the encoding, fps and resolution
+    if out:
+        out.release()
+    return cv2.VideoWriter('test ' + str(time.strftime('%d_%m_%Y_%H_%M_%S')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 24, (frame_width, frame_height))
+
+
 try:
     init()
+    new_video_out_object = 0
+    out = get_video_output()
+
     while 1:
         print(status)
         #status = 0
 
         if status == 0:
             #rotate_idle()
-            print("Rotating")
+            new_video_out_object_needed = 1
+            print("Rotating idle, looking for target")
         else:  # Pest has been found, aim at target and record video
             #error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
             # error_vert_angle = 0
             #rotate_to_target(error_hor_angle)
             # tilt(error_vert_angle)
-            record_video()
+            if new_video_out_object_needed == 1:
+                out = get_video_output(out)
+                new_video_out_object_needed = 0
+            record_video(out)
+            print("Target found")
 except KeyboardInterrupt:
     pi.stop()
     cap.release()

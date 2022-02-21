@@ -205,18 +205,28 @@ def get_video_output(out=None):
     #Specify the path and name of the video file as well as the encoding, fps and resolution
     if out:
         out.release()
-    return cv2.VideoWriter('test ' + str(time.strftime('%d_%m_%Y_%H_%M_%S')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 24, (frame_width, frame_height))
+    return cv2.VideoWriter('video/test ' + str(time.strftime('%d_%m_%Y_%H_%M_%S')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 24, (frame_width, frame_height))
 
 
 try:
     init()
     new_video_out_object = 0
     out = get_video_output()
+    count = 0
 
     while 1:
-        print(status)
+        print(status, count)
         #status = 0
-
+        count += 1
+        if count == 400:
+            status = 1
+        elif count == 500:
+            status = 0
+        elif count == 700:
+            status = 1    
+        elif count == 800:
+            status = 0
+            
         if status == 0:
             #rotate_idle()
             new_video_out_object_needed = 1

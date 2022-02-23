@@ -5,25 +5,22 @@ import time
 
 """Init for GPIO for servo/tilt"""
 print("Init GPIO start")
-servoPIN = 27  # pin 13 on RPI
+stepPIN = 27  # pin 13 on RPI
 pi = pigpio.pi()
-pi.set_mode(servoPIN, pigpio.INPUT)
+pi.set_mode(stepPIN, pigpio.INPUT)
 print("Init GPIO finished")
 
-pi.write(servoPIN, 1)
-time.sleep(0.5)
-pi.write(servoPIN, 0)
-time.sleep(0.5)
-pi.write(servoPIN, 1)
-time.sleep(0.5)
-pi.write(servoPIN, 0)
-time.sleep(0.5)
-pi.write(servoPIN, 1)
-time.sleep(0.5)
-pi.write(servoPIN, 0)
-time.sleep(0.5)
-pi.write(servoPIN, 1)
-time.sleep(0.5)
+pin_operator = 0
+for i in range(100):
+    if pin_operator == 1:
+        pi.write(stepPIN, 1)
+        print("High")
+    else:
+        pi.write(stepPIN, 0)
+        print("Low")
+    pin_operator = pin_operator * -1
+    time.sleep(0.5)
+
 
 
 

@@ -40,7 +40,6 @@ print("Init GPIO start")
 servoPIN = 17  # pin 11 on RPI
 pi = pigpio.pi()
 pulsewidth = MID_PW
-pi.set_mode(servoPIN, pigpio.INPUT)
 pi.set_servo_pulsewidth(servoPIN, pulsewidth)
 
 """Init for PIGPIO for stepper driver"""

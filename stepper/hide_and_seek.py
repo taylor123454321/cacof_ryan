@@ -40,13 +40,17 @@ print("Init GPIO start")
 servoPIN = 17  # pin 11 on RPI
 pi = pigpio.pi()
 pulsewidth = MID_PW
+pi.set_mode(servoPIN, pigpio.INPUT)
 pi.set_servo_pulsewidth(servoPIN, pulsewidth)
 
 """Init for PIGPIO for stepper driver"""
 stepPIN = 27  # pin 13 on RPI
 dirPIN = 22  # pin 15 on RPI
+enablePIN = 23  # pin 16 on RPI
 pi.set_mode(stepPIN, pigpio.INPUT)
 pi.set_mode(dirPIN, pigpio.INPUT)
+pi.set_mode(enablePIN, pigpio.INPUT)
+
 
 print("Init PIGPIO finished")
 
@@ -106,13 +110,15 @@ print("Init dbus finished")
 
 def stepper_step(steps):
     pin_operator = 1
+    pi.write(enablePIN, 1)
     for i in range(steps):
         if pin_operator == 1:
             pi.write(stepPIN, 1)
         elif pin_operator == -1:
             pi.write(stepPIN, 0)
         pin_operator = pin_operator * -1
-        time.sleep(0.001)
+        time.sleep(0.001)  # 2RPM or 35s cycle time
+    pi.write(enablePIN, 0)
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -254,6 +260,10 @@ try:
             record_video(out)
             print("Target found")
 except KeyboardInterrupt:
+    pi.write(stepPIN, 0)
+    pi.write(enablePIN, 0)
     pi.stop()
     cap.release()
     out.release()
+
+

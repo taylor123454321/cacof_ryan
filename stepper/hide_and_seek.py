@@ -119,20 +119,18 @@ def stepper_step(steps):
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
-    pi.write(enablePIN, 1)
-
     if direct <= 0:
         pi.write(dirPIN, 0)  # CCW
         stepper_step(steps)
     else:
         pi.write(dirPIN, 1)  # CW
         stepper_step(steps)
-    pi.write(enablePIN, 0)
 
 
 def init():
     # Spin stepper
     time_delay = 1
+    pi.write(enablePIN, 1)
     print("Attempting stepper init spin")
     stepper_spin(50, 0)
     time.sleep(time_delay)

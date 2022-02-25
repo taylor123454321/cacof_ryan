@@ -101,18 +101,18 @@ bus.add_signal_receiver(
     dbus_interface=DBUS_NAME,
     signal_name="Tracking",
     )
-print("Init dbus finishsed")
+print("Init dbus finished")
 
 
 def stepper_step(steps):
     pin_operator = 1
-    for i in range(1000):
+    for i in range(steps):
         if pin_operator == 1:
             pi.write(stepPIN, 1)
         elif pin_operator == -1:
             pi.write(stepPIN, 0)
         pin_operator = pin_operator * -1
-        time.sleep(0.01)
+        time.sleep(0.005)
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -126,21 +126,22 @@ def stepper_spin(steps, direct):  # Function to control stepper motor
 
 def init():
     # Spin stepper
+    time_delay = 1
     print("Attempting stepper init spin")
     stepper_spin(50, 0)
-    time.sleep(2)
+    time.sleep(time_delay)
     stepper_spin(50, 1)
     # Tilt servo
-    time.sleep(2)
+    time.sleep(time_delay)
     print("Attempting servo init tilt")
     pi.set_servo_pulsewidth(servoPIN, MID_PW)
-    time.sleep(2)
+    time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MIN_PW)
-    time.sleep(2)
+    time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MAX_PW)
-    time.sleep(2)
+    time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MID_PW)
-    time.sleep(2)
+    time.sleep(time_delay)
 
 
 def rotate_to_target(error):

@@ -112,7 +112,7 @@ def stepper_step(steps):
         elif pin_operator == -1:
             pi.write(stepPIN, 0)
         pin_operator = pin_operator * -1
-        time.sleep(0.005)
+        time.sleep(0.001)
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor

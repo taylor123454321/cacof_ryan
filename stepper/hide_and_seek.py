@@ -3,10 +3,6 @@ print("Imports started")
 import time
 import board
 
-"""Stepper motor library import"""
-from adafruit_motor import stepper
-from adafruit_motorkit import MotorKit 
-
 """Servo library import"""
 import pigpio
 
@@ -36,16 +32,23 @@ MID_PW = 1300
 MAX_PW = 1500
 
 status = 0  # 0 is if no pest found, 1 if pest is found
-region_global = [0]*4 # Array for centroid of pest
+region_global = [0]*4  # Array for centroid of pest
 
 
-"""Init for GPIO for servo/tilt"""
+"""Init for PIGPIO for servo/tilt"""
 print("Init GPIO start")
 servoPIN = 17  # pin 11 on RPI
 pi = pigpio.pi()
 pulsewidth = MID_PW
 pi.set_servo_pulsewidth(servoPIN, pulsewidth)
-print("Init GPIO finished")
+
+"""Init for PIGPIO for stepper driver"""
+stepPIN = 27  # pin 13 on RPI
+dirPIN = 22  # pin 15 on RPI
+pi.set_mode(stepPIN, pigpio.INPUT)
+pi.set_mode(dirPIN, pigpio.INPUT)
+
+print("Init PIGPIO finished")
 
 """OpenCV init camera"""
 # Create a VideoCapture object
@@ -53,7 +56,7 @@ print("Init camera start")
 cap = cv2.VideoCapture(0)
 
 # Check if camera opened successfully
-if cap.isOpened() == False:
+if cap.isOpened() is False:
     print("Unable to read camera feed")
 
 # Default resolutions of the frame are obtained.The default resolutions are system dependent.
@@ -101,24 +104,34 @@ bus.add_signal_receiver(
 print("Init dbus finishsed")
 
 
+def stepper_step(steps):
+    pin_operator = 1
+    for i in range(1000):
+        if pin_operator == 1:
+            pi.write(stepPIN, 1)
+            print("High")
+        elif pin_operator == -1:
+            pi.write(stepPIN, 0)
+            print("Low")
+        pin_operator = pin_operator * -1
+        time.sleep(0.01)
+
+
 def stepper_spin(steps, direct):  # Function to control stepper motor
-    kit = MotorKit(i2c=board.I2C())  # Init stepper
     if direct <= 0:
-        for i in range(steps):
-            kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
-            # time.sleep(0.01)
+        pi.write(dirPIN, 0)  # CCW
+        stepper_step(steps)
     else:
-        for i in range(steps):
-            kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
-            # time.sleep(0.01)
-    # time.sleep(4)
-    kit.stepper1.release()  # Close stepper or else it makes noise
+        pi.write(dirPIN, 1)  # CW
+        stepper_step(steps)
 
 
 def init():
     # Spin stepper
     print("Attempting stepper init spin")
     stepper_spin(50, 0)
+    time.sleep(2)
+    stepper_spin(50, 1)
     # Tilt servo
     time.sleep(2)
     print("Attempting servo init tilt")
@@ -216,19 +229,19 @@ try:
 
     while 1:
         print(status, count)
-        #status = 0
+        status = 0
         count += 1
-        if count == 400:
+        """if count == 400:
             status = 1
         elif count == 500:
             status = 0
         elif count == 700:
             status = 1    
         elif count == 800:
-            status = 0
+            status = 0"""
             
         if status == 0:
-            #rotate_idle()
+            rotate_idle()
             new_video_out_object_needed = 1
             print("Rotating idle, looking for target")
         else:  # Pest has been found, aim at target and record video
@@ -245,4 +258,3 @@ except KeyboardInterrupt:
     pi.stop()
     cap.release()
     out.release()
-    # kit.stepper1.release()

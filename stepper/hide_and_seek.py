@@ -109,7 +109,6 @@ print("Init dbus finished")
 
 def stepper_step(steps):
     pin_operator = 1
-    pi.write(enablePIN, 1)
     for i in range(steps):
         if pin_operator == 1:
             pi.write(stepPIN, 1)
@@ -117,16 +116,18 @@ def stepper_step(steps):
             pi.write(stepPIN, 0)
         pin_operator = pin_operator * -1
         time.sleep(0.001)  # 2RPM or 35s cycle time
-    pi.write(enablePIN, 0)
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
+    pi.write(enablePIN, 1)
+
     if direct <= 0:
         pi.write(dirPIN, 0)  # CCW
         stepper_step(steps)
     else:
         pi.write(dirPIN, 1)  # CW
         stepper_step(steps)
+    pi.write(enablePIN, 0)
 
 
 def init():

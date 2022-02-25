@@ -109,6 +109,7 @@ print("Init dbus finished")
 
 def stepper_step(steps):
     pin_operator = 1
+    pi.write(enablePIN, 0)  # Enable stepper driver
     for i in range(steps):
         if pin_operator == 1:
             pi.write(stepPIN, 1)
@@ -116,6 +117,8 @@ def stepper_step(steps):
             pi.write(stepPIN, 0)
         pin_operator = pin_operator * -1
         time.sleep(0.001)  # 2RPM or 35s cycle time
+    pi.write(enablePIN, 1)
+
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -132,9 +135,10 @@ def init():
     time_delay = 1
     pi.write(enablePIN, 0)
     print("Attempting stepper init spin")
-    stepper_spin(50, 0)
+    stepper_spin(500, 0)
     time.sleep(time_delay)
-    stepper_spin(50, 1)
+    stepper_spin(500, 1)
+    pi.write(enablePIN, 1)
     # Tilt servo
     time.sleep(time_delay)
     print("Attempting servo init tilt")

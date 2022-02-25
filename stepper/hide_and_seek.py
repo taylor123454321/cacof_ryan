@@ -130,7 +130,7 @@ def stepper_spin(steps, direct):  # Function to control stepper motor
 def init():
     # Spin stepper
     time_delay = 1
-    pi.write(enablePIN, 1)
+    pi.write(enablePIN, 0)
     print("Attempting stepper init spin")
     stepper_spin(50, 0)
     time.sleep(time_delay)
@@ -259,7 +259,7 @@ try:
             print("Target found")
 except KeyboardInterrupt:
     pi.write(stepPIN, 0)
-    pi.write(enablePIN, 0)
+    pi.write(enablePIN, 1)
     pi.stop()
     cap.release()
     out.release()

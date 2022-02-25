@@ -109,7 +109,6 @@ print("Init dbus finished")
 
 def stepper_step(steps):
     pin_operator = 1
-    pi.write(enablePIN, 0)  # Enable stepper driver
     for i in range(steps):
         if pin_operator == 1:
             pi.write(stepPIN, 1)
@@ -117,7 +116,6 @@ def stepper_step(steps):
             pi.write(stepPIN, 0)
         pin_operator = pin_operator * -1
         time.sleep(0.001)  # 2RPM or 35s cycle time
-    pi.write(enablePIN, 1)
 
 
 
@@ -233,6 +231,7 @@ try:
     new_video_out_object = 0
     out = get_video_output()
     count = 0
+    pi.write(enablePIN, 0)  # Enable stepper driver
 
     while 1:
         print(status, count)

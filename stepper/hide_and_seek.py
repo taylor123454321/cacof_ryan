@@ -110,7 +110,7 @@ def stepper_step(steps):
     bit = 0
     for i in range(steps):
         pi.write(stepPIN, bit)
-        bit = 1 - bit  # Swap value from 1 to 0 to 1
+        bit = 1 - bit  # Swap value from 1 to 0 to 1 etc
         time.sleep(0.001)  # 2RPM or 35s cycle time
 
 
@@ -246,9 +246,9 @@ try:
             new_video_out_object_needed = 1
             print("Rotating idle, looking for target")
         else:  # Pest has been found, aim at target and record video
-            #error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
+            # error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
             # error_vert_angle = 0
-            #rotate_to_target(error_hor_angle)
+            # rotate_to_target(error_hor_angle)
             # tilt(error_vert_angle)
             if new_video_out_object_needed == 1:
                 out = get_video_output(out)

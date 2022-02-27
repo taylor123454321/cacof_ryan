@@ -86,8 +86,7 @@ def catchall_tracking_signals_handler(what, confidence, region, tracking):
     )
     status = tracking
     region_global = region
-    
-    
+
     
 global object
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
@@ -108,15 +107,11 @@ print("Init dbus finished")
 
 
 def stepper_step(steps):
-    pin_operator = 1
+    bit = 0
     for i in range(steps):
-        if pin_operator == 1:
-            pi.write(stepPIN, 1)
-        elif pin_operator == -1:
-            pi.write(stepPIN, 0)
-        pin_operator = pin_operator * -1
+        pi.write(stepPIN, bit)
+        bit = 1 - bit  # Swap value from 1 to 0 to 1
         time.sleep(0.001)  # 2RPM or 35s cycle time
-
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -220,7 +215,7 @@ def record_video(out):
 
 
 def get_video_output(out=None):
-    #Specify the path and name of the video file as well as the encoding, fps and resolution
+    # Specify the path and name of the video file as well as the encoding, fps and resolution
     if out:
         out.release()
     return cv2.VideoWriter('video/test ' + str(time.strftime('%d_%m_%Y_%H_%M_%S')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 24, (frame_width, frame_height))

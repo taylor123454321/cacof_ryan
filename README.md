@@ -24,5 +24,6 @@ On RPI
 localhost.local
 
 
-sudo chmod -R 757 cacof_ryan
+
+sudo chmod -R u=rwx,g=wrx,o=rwx cacof_ryan/
 

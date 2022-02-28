@@ -218,27 +218,30 @@ def get_video_output(out=None):
     # Specify the path and name of the video file as well as the encoding, fps and resolution
     if out:
         out.release()
-    return cv2.VideoWriter('video/test ' + str(time.strftime('%d_%m_%Y_%H_%M_%S')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 24, (frame_width, frame_height))
+    return cv2.VideoWriter('video/test ' + str(time.strftime('%Y-%m-%d_%H.%M.%S')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
+    # (YYYY-MM-DD_HR.MIN.SEC_CAMERA_ID)., was '%d_%m_%Y_%H_%M_%S'
 
 
 try:
     init()
-    new_video_out_object = 0
+    new_video_out_object_needed = 0
     out = get_video_output()
     count = 0
+    total_time = time.time()
+    start_time = time.time()
     pi.write(enablePIN, 0)  # Enable stepper driver
 
     while 1:
         print(status, count)
         status = 0
         count += 1
-        """if count == 400:
+        """if count == 100:
             status = 1
-        elif count == 500:
+        elif count == 200:
             status = 0
-        elif count == 700:
+        elif count == 300:
             status = 1    
-        elif count == 800:
+        elif count == 400:
             status = 0"""
             
         if status == 0:
@@ -253,8 +256,15 @@ try:
             if new_video_out_object_needed == 1:
                 out = get_video_output(out)
                 new_video_out_object_needed = 0
+                start_time = time.time()
             record_video(out)
             print("Target found")
+
+        total_time = time.time() - start_time
+        if total_time >= 30:
+            new_video_out_object_needed = 1
+            start_time = time.time()
+            print("Max USB video time reached\nSet new video flag")
 except KeyboardInterrupt:
     pi.write(stepPIN, 0)
     pi.write(enablePIN, 1)

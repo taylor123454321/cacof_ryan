@@ -235,16 +235,16 @@ try:
         print(status, count)
         #status = 0
         count += 1
-        if count == 100:
+        if count == 30:
             status = 1
-            print(status)
-        elif count == 200:
-            status = 0
             print(status)
         elif count == 300:
+            status = 0
+            print(status)
+        elif count == 330:
             status = 1
             print(status)
-        elif count == 400:
+        elif count == 500:
             status = 0
             print(status)
             

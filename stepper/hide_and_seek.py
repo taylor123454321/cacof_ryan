@@ -56,7 +56,7 @@ pi.set_mode(enablePIN, pigpio.INPUT)
 print("Init PIGPIO finished")
 
 """OpenCV init camera"""
-# Create a VideoCapture object
+"""# Create a VideoCapture object
 print("Init camera start")
 cap = cv2.VideoCapture(0)
 
@@ -67,7 +67,7 @@ if cap.isOpened() is False:
 # Default resolutions of the frame are obtained.The default resolutions are system dependent.
 # We convert the resolutions from float to integer.
 frame_width = int(cap.get(3))
-frame_height = int(cap.get(4))
+frame_height = int(cap.get(4))"""
 
 print("Init camera finished")
 
@@ -93,7 +93,7 @@ def catchall_tracking_signals_handler(what, confidence, region, tracking):
         tracking,
     )
     #status = tracking
-    region_global = region
+    #region_global = region
 
 
 time.sleep(1)
@@ -123,7 +123,7 @@ def stepper_step(steps):
     for i in range(steps):
         pi.write(stepPIN, bit)
         bit = 1 - bit  # Swap value from 1 to 0 to 1 etc
-        time.sleep(0.005)  # 2RPM or 35s cycle time
+        time.sleep(0.005)  # 0.001 = 2RPM or 35s cycle time
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -237,10 +237,10 @@ def get_video_output(out=None):
 try:
     init()
     new_video_out_object_needed = 0
-    out = get_video_output()
+    #out = get_video_output()
     count = 0
-    total_time = time.time()
-    start_time = time.time()
+    #total_time = time.time()
+    #start_time = time.time()
     pi.write(enablePIN, 0)  # Enable stepper driver
 
     while 1:
@@ -270,22 +270,22 @@ try:
             # rotate_to_target(error_hor_angle)
             # tilt(error_vert_angle)
             if new_video_out_object_needed == 1:
-                out = get_video_output(out)
+                #out = get_video_output(out)
                 new_video_out_object_needed = 0
-                start_time = time.time()
-            record_video(out)
+                #start_time = time.time()
+            #record_video(out)
             print("Target found")
 
-            total_time = time.time() - start_time
+            """total_time = time.time() - start_time
             if total_time >= 30:
                 new_video_out_object_needed = 1
                 start_time = time.time()
-                print("Max USB video time reached\nSet new video flag")
+                print("Max USB video time reached\nSet new video flag")"""
 except KeyboardInterrupt:
     pi.write(stepPIN, 0)
     pi.write(enablePIN, 1)
     pi.stop()
-    cap.release()
-    out.release()
+    #cap.release()
+    #out.release()
 
 

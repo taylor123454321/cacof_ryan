@@ -128,7 +128,7 @@ def stepper_spin(steps, direct):  # Function to control stepper motor
 
 def init():
     # Spin stepper
-    time_delay = 1
+    """time_delay = 1
     pi.write(enablePIN, 0)
     print("Attempting stepper init spin")
     stepper_spin(500, 0)
@@ -137,7 +137,7 @@ def init():
     pi.write(enablePIN, 1)
     # Tilt servo
     time.sleep(time_delay)
-    """print("Attempting servo init tilt")
+    print("Attempting servo init tilt")
     pi.set_servo_pulsewidth(servoPIN, MID_PW)
     time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MIN_PW)
@@ -253,7 +253,7 @@ try:
             print(status)"""
             
         if status == 0:
-            rotate_idle()
+            #rotate_idle()
             new_video_out_object_needed = 1
             print("Rotating idle, looking for target")
         """else:  # Pest has been found, aim at target and record video

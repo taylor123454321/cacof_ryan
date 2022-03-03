@@ -211,7 +211,7 @@ def record_video(out):
     if ret:
         # Write the frame into the file 'output.avi'
         out.write(frame)
-        print("Recording video")
+        #print("Recording video")
 
 
 def get_video_output(out=None):
@@ -238,13 +238,13 @@ try:
         if count == 30:
             status = 1
             print(status)
-        elif count == 300:
+        elif count == 500:
             status = 0
             print(status)
-        elif count == 330:
+        elif count == 530:
             status = 1
             print(status)
-        elif count == 500:
+        elif count == 700:
             status = 0
             print(status)
             
@@ -262,7 +262,7 @@ try:
                 new_video_out_object_needed = 0
                 start_time = time.time()
             record_video(out)
-            print("Target found")
+            #print("Target found")
 
             total_time = time.time() - start_time
             if total_time >= 30:

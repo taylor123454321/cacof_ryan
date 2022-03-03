@@ -46,4 +46,5 @@ if __name__ == "__main__":
 
     # GLib.timeout_add(1000, make_calls)
 
-    #loop.run()
+    loop.run()
+    print("hi")

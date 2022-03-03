@@ -243,7 +243,7 @@ try:
     #start_time = time.time()
     pi.write(enablePIN, 0)  # Enable stepper driver
     status = 0
-
+    loop.run()
     while 1:
         print(status, count)
         #status = 0

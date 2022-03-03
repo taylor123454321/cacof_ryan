@@ -76,16 +76,16 @@ def handler(sender=None):
 
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
-    """print(
+    print(
         "Received a tracking signal," + what,
         confidence,
         "% at ",
         region,
         " tracking?",
         tracking,
-    )"""
+    )
     #status = tracking
-    #region_global = region
+    region_global = region
 
     
 global object
@@ -211,14 +211,14 @@ def record_video(out):
     if ret:
         # Write the frame into the file 'output.avi'
         out.write(frame)
-        #print("Recording video")
+        print("Recording video")
 
 
 def get_video_output(out=None):
     # Specify the path and name of the video file as well as the encoding, fps and resolution
     if out:
         out.release()
-    return cv2.VideoWriter('video/test ' + str(time.strftime('%Y-%m-%d_%H.%M.%S')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
+    return cv2.VideoWriter('video/test ' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
     # (YYYY-MM-DD_HR.MIN.SEC_CAMERA_ID)., was '%d_%m_%Y_%H_%M_%S'
 
 
@@ -235,7 +235,7 @@ try:
         print(status, count)
         #status = 0
         count += 1
-        if count == 30:
+        """if count == 30:
             status = 1
             print(status)
         elif count == 500:
@@ -246,7 +246,7 @@ try:
             print(status)
         elif count == 700:
             status = 0
-            print(status)
+            print(status)"""
             
         if status == 0:
             rotate_idle()
@@ -262,7 +262,7 @@ try:
                 new_video_out_object_needed = 0
                 start_time = time.time()
             record_video(out)
-            #print("Target found")
+            print("Target found")
 
             total_time = time.time() - start_time
             if total_time >= 30:

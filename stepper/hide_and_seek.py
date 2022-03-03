@@ -38,10 +38,10 @@ region_global = [0]*4  # Array for centroid of pest
 """
 
 """Init for PIGPIO for servo/tilt"""
-"""print("Init GPIO start")
+print("Init GPIO start")
 servoPIN = 17  # pin 11 on RPI
 pi = pigpio.pi()
-pulsewidth = MID_PW
+"""pulsewidth = MID_PW
 pi.set_servo_pulsewidth(servoPIN, pulsewidth)"""
 
 """Init for PIGPIO for stepper driver"""

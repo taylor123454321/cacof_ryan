@@ -264,11 +264,11 @@ try:
             record_video(out)
             print("Target found")
 
-        total_time = time.time() - start_time
-        if total_time >= 30:
-            new_video_out_object_needed = 1
-            start_time = time.time()
-            print("Max USB video time reached\nSet new video flag")
+            total_time = time.time() - start_time
+            if total_time >= 30:
+                new_video_out_object_needed = 1
+                start_time = time.time()
+                print("Max USB video time reached\nSet new video flag")
 except KeyboardInterrupt:
     pi.write(stepPIN, 0)
     pi.write(enablePIN, 1)

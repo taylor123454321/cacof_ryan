@@ -76,16 +76,16 @@ def handler(sender=None):
 
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
-    print(
-        "Received a trackng signal," + what,
+    """print(
+        "Received a tracking signal," + what,
         confidence,
         "% at ",
         region,
         " tracking?",
         tracking,
-    )
-    status = tracking
-    region_global = region
+    )"""
+    #status = tracking
+    #region_global = region
 
     
 global object
@@ -233,16 +233,20 @@ try:
 
     while 1:
         print(status, count)
-        status = 0
+        #status = 0
         count += 1
-        """if count == 100:
+        if count == 100:
             status = 1
+            print(status)
         elif count == 200:
             status = 0
+            print(status)
         elif count == 300:
-            status = 1    
+            status = 1
+            print(status)
         elif count == 400:
-            status = 0"""
+            status = 0
+            print(status)
             
         if status == 0:
             rotate_idle()

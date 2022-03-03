@@ -22,7 +22,6 @@ from gi.repository import GLib
 
 import dbus
 import dbus.mainloop.glib
-time.sleep(1)
 
 
 print("Imports finished")
@@ -39,7 +38,7 @@ region_global = [0]*4  # Array for centroid of pest
 
 """Init for PIGPIO for servo/tilt"""
 print("Init GPIO start")
-servoPIN = 17  # pin 11 on RPI
+#servoPIN = 17  # pin 11 on RPI
 pi = pigpio.pi()
 """pulsewidth = MID_PW
 pi.set_servo_pulsewidth(servoPIN, pulsewidth)"""
@@ -69,18 +68,14 @@ if cap.isOpened() is False:
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))"""
 
-print("Init camera finished")
+#print("Init camera finished")
 
 """DBUS init"""
 print("Init dbus start")
-time.sleep(1)
 
 
 def handler(sender=None):
     print("got signal from %r" % sender)
-
-
-time.sleep(1)
 
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
@@ -96,11 +91,9 @@ def catchall_tracking_signals_handler(what, confidence, region, tracking):
     #region_global = region
 
 
-time.sleep(1)
 global object
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 loop = GLib.MainLoop()
-time.sleep(1)
 try:
     bus = dbus.SystemBus()
     object = bus.get_object(DBUS_NAME, DBUS_PATH)
@@ -108,13 +101,11 @@ except dbus.exceptions.DBusException as e:
     print("Failed to initialize D-Bus object: '%s'" % str(e))
     sys.exit(2)
 
-time.sleep(1)
 bus.add_signal_receiver(
     catchall_tracking_signals_handler,
     dbus_interface=DBUS_NAME,
     signal_name="Tracking",
     )
-time.sleep(1)
 print("Init dbus finished")
 
 
@@ -205,8 +196,8 @@ def tilt(error):
 
 
 def rotate_idle():
-    search_step = 400  # 10 terns = half rotation, 2 turns = 11s
-    direction = 0  # Camera overlap
+    search_step = 400
+    direction = 0
     stepper_spin(search_step, direction)
 
 
@@ -243,7 +234,7 @@ try:
     #start_time = time.time()
     pi.write(enablePIN, 0)  # Enable stepper driver
     status = 0
-    loop.run()
+
     while 1:
         print(status, count)
         #status = 0

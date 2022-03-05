@@ -49,7 +49,7 @@ if __name__ == "__main__":
         dbus_interface=DBUS_NAME,
         signal_name="Tracking",
     )
-    GLib.g_timeout_add(1000, hello)
+    GLib.timeout_add(1000, hello)
 
     # GLib.timeout_add(1000, make_calls)
 

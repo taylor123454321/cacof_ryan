@@ -3,6 +3,8 @@
 # Take in a single optional integral argument
 import sys
 import time
+"""Servo library import"""
+import pigpio
 
 DBUS_NAME = "org.cacophony.thermalrecorder"
 DBUS_PATH = "/org/cacophony/thermalrecorder"
@@ -12,6 +14,15 @@ from gi.repository import GLib
 import dbus
 import dbus.mainloop.glib
 
+print("Init GPIO start")
+pi = pigpio.pi()
+"""Init for PIGPIO for stepper driver"""
+stepPIN = 27  # pin 13 on RPI
+dirPIN = 22  # pin 15 on RPI
+enablePIN = 23  # pin 16 on RPI
+pi.set_mode(stepPIN, pigpio.INPUT)
+pi.set_mode(dirPIN, pigpio.INPUT)
+pi.set_mode(enablePIN, pigpio.INPUT)
 
 def handler(sender=None):
     print("got signal from %r" % sender)
@@ -28,9 +39,15 @@ def catchall_tracking_signals_handler(what, confidence, region, tracking):
     )
 
 
-def hello():
-   print("Hello world!\n")
-   return True
+def hello(steps):
+    bit = 0
+    for i in range(steps):
+        pi.write(stepPIN, bit)
+        bit = 1 - bit  # Swap value from 1 to 0 to 1 etc
+        time.sleep(0.005)  # 0.001 = 2RPM or 35s cycle time
+    return True
+
+
 
 
 if __name__ == "__main__":
@@ -49,7 +66,10 @@ if __name__ == "__main__":
         dbus_interface=DBUS_NAME,
         signal_name="Tracking",
     )
-    GLib.timeout_add(10, hello)
+
+    pi.write(enablePIN, 0)  # Enable stepper driver
+
+    GLib.timeout_add(100, hello, 50)
 
     # GLib.timeout_add(1000, make_calls)
 

@@ -29,7 +29,7 @@ def handler(sender=None):
 
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
-    if what != 'false-positives':
+    if what == 'false-positives':
         print(
             "Received a tracking signal and it says " + what,
             confidence,

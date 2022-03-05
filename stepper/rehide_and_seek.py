@@ -29,25 +29,25 @@ def handler(sender=None):
 
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
-    print(
-        "Received a trackng signal and it says " + what,
-        confidence,
-        "% at ",
-        region,
-        " tracking?",
-        tracking,
-    )
+    if what != 'false-positives':
+        print(
+            "Received a tracking signal and it says " + what,
+            confidence,
+            "% at ",
+            region,
+            " tracking?",
+            tracking,
+        )
 
 
 def hello(steps):
     bit = 0
+    pi.write(dirPIN, 0)  # CCW
     for i in range(steps):
         pi.write(stepPIN, bit)
         bit = 1 - bit  # Swap value from 1 to 0 to 1 etc
         time.sleep(0.005)  # 0.001 = 2RPM or 35s cycle time
     return True
-
-
 
 
 if __name__ == "__main__":

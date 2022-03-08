@@ -277,6 +277,7 @@ except KeyboardInterrupt:
     pi.write(stepPIN, 0)
     pi.write(enablePIN, 1)
     pi.stop()
+    #tracking.quit()
     #cap.release()
     #out.release()
 

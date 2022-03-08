@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+print("Imports started")
 # Take in a single optional integral argument
 import sys
 
@@ -57,7 +57,7 @@ def catchall_tracking_signals_handler(what, confidence, region, track):
         "What = " + what,
         confidence,
         "% at ",
-        region,
+        region[0], region[1], region[2], region[3],
         " track = ",
         track,
     )
@@ -192,6 +192,7 @@ if __name__ == "__main__":
                 else:  # Pest has been found, aim at target and record video
                     #print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
+                    time.sleep(0.1)
                     # error_vert_angle = 0
                     # rotate_to_target(error_hor_angle)
                     # tilt(error_vert_angle)

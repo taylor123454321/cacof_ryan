@@ -146,9 +146,9 @@ def rotate_idle():
 def calculate_error(region):
     # region = [x1,y1,x2,y2]
     error_hor = 20
-    # error_vert = 0
+    error_vert = 0
     print(error_hor)
-    return error_hor  # , error_vert
+    return error_hor, error_vert
 
 
 if __name__ == "__main__":

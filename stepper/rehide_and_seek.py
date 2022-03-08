@@ -122,6 +122,7 @@ def init():
     time.sleep(time_delay)
     stepper_spin(500, 1)
     pi.write(enablePIN, 1)
+    time.sleep(time_delay)
     """
     # Tilt servo
     time.sleep(time_delay)
@@ -163,7 +164,7 @@ def calculate_error(region):
     # region = [x1,y1,x2,y2]
     half_frame_width = 90
     half_frame_height = 60
-    error_hor = half_frame_width - (x1 + x2)
+    error_hor = half_frame_width - (region[0] + region[2])
     error_vert = 0
     print(error_hor)
     return error_hor, error_vert

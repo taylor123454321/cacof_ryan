@@ -17,6 +17,22 @@ import board
 """Servo/stepper library import"""
 import pigpio
 
+"""OpenCV library import"""
+import cv2
+import numpy as np
+
+print("Imports finished")
+
+error_angle = 0
+
+MIN_PW = 1100
+MID_PW = 1300
+MAX_PW = 1500
+
+status = 0  # 0 is if no pest found, 1 if pest is found
+region_global = [0]*4  # Array for centroid of pest
+
+
 """Init for PIGPIO for servo/tilt"""
 print("Init GPIO start")
 #servoPIN = 17  # pin 11 on RPI
@@ -45,6 +61,8 @@ def catchall_tracking_signals_handler(what, confidence, region, tracking):
         " tracking?",
         tracking,
     )
+    status = tracking
+    region_global = region
 
 
 
@@ -95,10 +113,41 @@ def stepper_spin(steps, direct):  # Function to control stepper motor
         stepper_step(steps)
 
 
+def init():
+    # Spin stepper
+    time_delay = 1
+    pi.write(enablePIN, 0)
+    print("Attempting stepper init spin")
+    stepper_spin(500, 0)
+    time.sleep(time_delay)
+    stepper_spin(500, 1)
+    pi.write(enablePIN, 1)
+    """
+    # Tilt servo
+    time.sleep(time_delay)
+    print("Attempting servo init tilt")
+    pi.set_servo_pulsewidth(servoPIN, MID_PW)
+    time.sleep(time_delay)
+    pi.set_servo_pulsewidth(servoPIN, MIN_PW)
+    time.sleep(time_delay)
+    pi.set_servo_pulsewidth(servoPIN, MAX_PW)
+    time.sleep(time_delay)
+    pi.set_servo_pulsewidth(servoPIN, MID_PW)
+    time.sleep(time_delay)"""
+
+
 def rotate_idle():
     search_step = 400
     direction = 0
     stepper_spin(search_step, direction)
+
+
+def calculate_error(region):
+    # region = [x1,y1,x2,y2]
+    error_hor = 20
+    # error_vert = 0
+    print(error_hor)
+    return error_hor  # , error_vert
 
 
 if __name__ == "__main__":
@@ -109,7 +158,7 @@ if __name__ == "__main__":
     while tracking.t.is_alive():
 
         try:
-            #init()
+            init()
             # new_video_out_object_needed = 0
             # out = get_video_output()
             count = 0
@@ -139,12 +188,13 @@ if __name__ == "__main__":
                     rotate_idle()
                     #new_video_out_object_needed = 1
                     print("Rotating idle, looking for target")
-                """else:  # Pest has been found, aim at target and record video
-                    # error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
+                else:  # Pest has been found, aim at target and record video
+                    #print("Target found")
+                    error_hor_angle, error_vert_angle = calculate_error(region_global)
                     # error_vert_angle = 0
                     # rotate_to_target(error_hor_angle)
                     # tilt(error_vert_angle)
-                    if new_video_out_object_needed == 1:
+                    '''if new_video_out_object_needed == 1:
                         #out = get_video_output(out)
                         new_video_out_object_needed = 0
                         #start_time = time.time()
@@ -155,7 +205,7 @@ if __name__ == "__main__":
                     if total_time >= 30:
                         new_video_out_object_needed = 1
                         start_time = time.time()
-                        print("Max USB video time reached\nSet new video flag")"""
+                        print("Max USB video time reached\nSet new video flag")'''
         except KeyboardInterrupt:
             pi.write(stepPIN, 0)
             pi.write(enablePIN, 1)

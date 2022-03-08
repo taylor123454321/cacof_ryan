@@ -109,7 +109,7 @@ if __name__ == "__main__":
     while tracking.t.is_alive():
 
         try:
-            init()
+            #init()
             # new_video_out_object_needed = 0
             # out = get_video_output()
             count = 0

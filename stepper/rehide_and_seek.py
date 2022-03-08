@@ -62,13 +62,12 @@ def catchall_tracking_signals_handler(what, confidence, region, track):
         track,
     )
     global status
+    global region_global
     status = track
-    #region_global = region
+    region_global = region
 
 
-
-# helper class to run dbus in background
-class TrackingService:
+class TrackingService:  # helper class to run dbus in background
     def __init__(self,callback):
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
         self.callback = callback
@@ -137,6 +136,23 @@ def init():
     time.sleep(time_delay)"""
 
 
+def rotate_to_target(error):
+    if error <= 0:  # CCW
+        direction = 0
+    else:
+        direction = 1  # CW
+
+    error = abs(error)
+    if error > 10:
+        error = 10
+    print("Rotate error = ", error)
+
+    if error > 2:
+        stepper_spin(error, direction)
+    else:
+        print("Too small to rotate")
+
+
 def rotate_idle():
     search_step = 400
     direction = 0
@@ -145,7 +161,9 @@ def rotate_idle():
 
 def calculate_error(region):
     # region = [x1,y1,x2,y2]
-    error_hor = 20
+    half_frame_width = 90
+    half_frame_height = 60
+    error_hor = half_frame_width - (x1 + x2)
     error_vert = 0
     print(error_hor)
     return error_hor, error_vert
@@ -192,10 +210,10 @@ if __name__ == "__main__":
                 else:  # Pest has been found, aim at target and record video
                     #print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
-                    time.sleep(0.1)
                     # error_vert_angle = 0
-                    # rotate_to_target(error_hor_angle)
+                    rotate_to_target(error_hor_angle)
                     # tilt(error_vert_angle)
+                    time.sleep(0.2)
                     '''if new_video_out_object_needed == 1:
                         #out = get_video_output(out)
                         new_video_out_object_needed = 0

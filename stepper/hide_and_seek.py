@@ -128,7 +128,7 @@ def stepper_spin(steps, direct):  # Function to control stepper motor
 
 def init():
     # Spin stepper
-    """time_delay = 1
+    time_delay = 1
     pi.write(enablePIN, 0)
     print("Attempting stepper init spin")
     stepper_spin(500, 0)
@@ -145,10 +145,10 @@ def init():
     pi.set_servo_pulsewidth(servoPIN, MAX_PW)
     time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MID_PW)
-    time.sleep(time_delay)"""
+    time.sleep(time_delay)
 
 
-"""def rotate_to_target(error):
+def rotate_to_target(error):
     if error <= 0:  # forward
         direction = 0
     else:
@@ -157,7 +157,7 @@ def init():
     error = abs(error)
     if error > 10:
         error = 10
-    print("Rotate error = {error}")
+    print("Rotate error = ", error)
 
     if error > 2:
         stepper_spin(error, direction)
@@ -192,7 +192,7 @@ def tilt(error):
         p.ChangeDutyCycle(center + error)
         time.sleep(0.1)
     else:
-        print("Too small to tilt")"""
+        print("Too small to tilt")
 
 
 def rotate_idle():
@@ -201,7 +201,7 @@ def rotate_idle():
     stepper_spin(search_step, direction)
 
 
-"""def calculate_error(region):
+def calculate_error(region):
     # region = [x1,y1,x2,y2]
     error_hor = 20
     # error_vert = 0
@@ -222,7 +222,7 @@ def get_video_output(out=None):
     if out:
         out.release()
     return cv2.VideoWriter('video/test ' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
-    # (YYYY-MM-DD_HR.MIN.SEC_CAMERA_ID)., was '%d_%m_%Y_%H_%M_%S'"""
+    # (YYYY-MM-DD_HR.MIN.SEC_CAMERA_ID)., was '%d_%m_%Y_%H_%M_%S'
 
 
 try:
@@ -256,7 +256,7 @@ try:
             #rotate_idle()
             new_video_out_object_needed = 1
             print("Rotating idle, looking for target")
-        """else:  # Pest has been found, aim at target and record video
+        else:  # Pest has been found, aim at target and record video
             # error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
             # error_vert_angle = 0
             # rotate_to_target(error_hor_angle)
@@ -272,7 +272,7 @@ try:
             if total_time >= 30:
                 new_video_out_object_needed = 1
                 start_time = time.time()
-                print("Max USB video time reached\nSet new video flag")"""
+                print("Max USB video time reached\nSet new video flag")
 except KeyboardInterrupt:
     pi.write(stepPIN, 0)
     pi.write(enablePIN, 1)

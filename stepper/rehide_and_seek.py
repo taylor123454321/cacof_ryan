@@ -52,17 +52,18 @@ pi.set_mode(enablePIN, pigpio.INPUT)
 print("Init PIGPIO finished")
 
 
-def catchall_tracking_signals_handler(what, confidence, region, tracking):
+def catchall_tracking_signals_handler(what, confidence, region, track):
     print(
         "What = " + what,
         confidence,
         "% at ",
         region,
-        " tracking?",
-        tracking,
+        " track = ",
+        track,
     )
-    status = tracking
-    region_global = region
+    global status
+    status = track
+    #region_global = region
 
 
 

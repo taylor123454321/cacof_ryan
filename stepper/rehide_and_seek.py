@@ -61,6 +61,10 @@ def catchall_tracking_signals_handler(what, confidence, region, track):
         " track = ",
         track,
     )
+    print("x_t = ", region[0] + region[2])
+    print("y_t = ", region[1] + region[3])
+    #print("x_t_avg = ", (region[0] + region[2])/2)
+    #print("y_t_avg = ", (region[1] + region[3])/2)
     global status
     global region_global
     status = track
@@ -166,7 +170,7 @@ def calculate_error(region):
     half_frame_height = 60
     error_hor = half_frame_width - ((region[0] + region[2])/2)
     error_vert = 0
-    print(error_hor)
+    #print(error_hor)
     return error_hor, error_vert
 
 
@@ -212,7 +216,7 @@ if __name__ == "__main__":
                     #print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
                     # error_vert_angle = 0
-                    rotate_to_target(error_hor_angle)
+                    # rotate_to_target(error_hor_angle)
                     # tilt(error_vert_angle)
                     time.sleep(0.2)
                     '''if new_video_out_object_needed == 1:

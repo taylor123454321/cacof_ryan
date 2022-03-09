@@ -61,10 +61,10 @@ def catchall_tracking_signals_handler(what, confidence, region, track):
         " track = ",
         track,
     )
-    print("x_t = ", region[0] + region[2])
-    print("y_t = ", region[1] + region[3])
-    #print("x_t_avg = ", (region[0] + region[2])/2)
-    #print("y_t_avg = ", (region[1] + region[3])/2)
+    #print("x_t = ", region[0] + region[2])
+    #print("y_t = ", region[1] + region[3])
+    print("x_t_avg = ", (region[0] + region[2])/2)
+    print("y_t_avg = ", (region[1] + region[3])/2)
     global status
     global region_global
     status = track

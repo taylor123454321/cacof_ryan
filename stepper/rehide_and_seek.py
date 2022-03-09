@@ -53,18 +53,16 @@ print("Init PIGPIO finished")
 
 
 def catchall_tracking_signals_handler(what, confidence, region, track):
-    print(
+    """print(
         "What = " + what,
         confidence,
         "% at ",
         region[0], region[1], region[2], region[3],
         " track = ",
         track,
-    )
-    #print("x_t = ", region[0] + region[2])
-    #print("y_t = ", region[1] + region[3])
-    print("x_t_avg = ", (region[0] + region[2])/2)
-    print("y_t_avg = ", (region[1] + region[3])/2)
+    )"""
+    #print("x_t_avg = ", (region[0] + region[2])/2)  # higher is right
+    #print("y_t_avg = ", (region[1] + region[3])/2)  # higher is lower
     global status
     global region_global
     status = track
@@ -168,9 +166,9 @@ def calculate_error(region):
     # region = [x1,y1,x2,y2]
     half_frame_width = 90
     half_frame_height = 60
-    error_hor = half_frame_width - ((region[0] + region[2])/2)
+    error_hor = half_frame_width - ((region[0] + region[2])/2)  # higher is right
     error_vert = 0
-    #print(error_hor)
+    print(error_hor)
     return error_hor, error_vert
 
 
@@ -218,7 +216,7 @@ if __name__ == "__main__":
                     # error_vert_angle = 0
                     # rotate_to_target(error_hor_angle)
                     # tilt(error_vert_angle)
-                    time.sleep(0.2)
+                    time.sleep(0.5)
                     '''if new_video_out_object_needed == 1:
                         #out = get_video_output(out)
                         new_video_out_object_needed = 0

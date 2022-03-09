@@ -166,9 +166,11 @@ def calculate_error(region):
     # region = [x1,y1,x2,y2]
     half_frame_width = 90
     half_frame_height = 60
-    error_hor = half_frame_width - ((region[0] + region[2])/2)  # higher is right
-    error_vert = 0
-    print(error_hor)
+    error_hor = half_frame_width - ((region[0] + region[2])/2)  # higher is right brackets
+    # error_hor right is -, left is +
+    error_vert = half_frame_height - ((region[1] + region[3])/2)  # higher is down brackets
+    # error_vert up is -, down is pos
+    print(error_hor, error_vert)
     return error_hor, error_vert
 
 

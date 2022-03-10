@@ -159,13 +159,8 @@ def rotate_to_target(error):
 
 
 def tilt_to_target(error):
-    pixel_to_PWM_ratio = 5  # 0.1 PWM to 10 pixels guess
-
-    print("Tilt error unaltered")
-    print(error)
+    pixel_to_PWM_ratio = 2  # 0.1 PWM to 10 pixels guess
     error = pixel_to_PWM_ratio * error
-    print("Tilt error altered")
-    print(error)
 
     """if error > 1:
         error = 1
@@ -176,13 +171,13 @@ def tilt_to_target(error):
 
     if (MID_PW + error) > MAX_PW or (MID_PW + error) < MIN_PW:
         error = 0
-        print("OUT OF BOUNDS TILT")
+        print("TILT OUT OF BOUNDS")
 
     if abs(error) > 20:
         pi.set_servo_pulsewidth(servoPIN, MID_PW + error)
         # time.sleep(0.1)
-    else:
-        print("Too small to tilt")
+    """else:
+        print("Too small to tilt")"""
 
 
 def rotate_idle():
@@ -196,7 +191,7 @@ def calculate_error(region):
     # region = [x1,y1,x2,y2]
     half_frame_width = 90
     half_frame_height = 60
-    error_hor = (half_frame_width - ((region[0] + region[2])/2))*-1  # higher is right brackets
+    error_hor = (half_frame_width - ((region[0] + region[2])/2))*1  # higher is right brackets
     # error_hor right is +, left is -
     error_vert = (half_frame_height - ((region[1] + region[3])/2))*-1  # higher is up brackets
     # error_vert up is +, down is -
@@ -222,7 +217,7 @@ if __name__ == "__main__":
             status = 0
 
             while 1:
-                print(status, count)
+                # print(status, count)
                 # status = 0
                 count += 1
                 """if count == 30:

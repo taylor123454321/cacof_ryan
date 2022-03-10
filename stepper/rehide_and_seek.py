@@ -61,11 +61,13 @@ def catchall_tracking_signals_handler(what, confidence, region, track):
         " track = ",
         track,
     )"""
-    #print("x_t_avg = ", (region[0] + region[2])/2)  # higher is right
-    #print("y_t_avg = ", (region[1] + region[3])/2)  # higher is lower
+    print("string = ", type(what))
     global status
     global region_global
-    status = track
+    if what != 'false_positives':
+        status = track
+    else:
+        status = 0
     region_global = region
 
 
@@ -103,7 +105,7 @@ def stepper_step(steps):
     for i in range(steps):
         pi.write(stepPIN, bit)
         bit = 1 - bit  # Swap value from 1 to 0 to 1 etc
-        time.sleep(0.005)  # 0.001 = 2RPM or 35s cycle time
+        time.sleep(0.001)  # 0.001 = 2RPM or 35s cycle time
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -173,7 +175,7 @@ def tilt_to_target(error):
         error = 0
         print("TILT OUT OF BOUNDS")
 
-    if abs(error) > 20:
+    if abs(error) > 5:
         pi.set_servo_pulsewidth(servoPIN, MID_PW + error)
         # time.sleep(0.1)
     """else:
@@ -238,7 +240,7 @@ if __name__ == "__main__":
                     #new_video_out_object_needed = 1
                     print("Rotating idle, looking for target")
                 else:  # Pest has been found, aim at target and record video
-                    print("Target found")
+                    # print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
                     rotate_to_target(error_hor_angle)
                     tilt_to_target(error_vert_angle)

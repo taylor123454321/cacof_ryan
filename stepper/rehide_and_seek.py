@@ -18,7 +18,7 @@ import board
 import pigpio
 
 """OpenCV library import"""
-import cv2
+# import cv2
 import numpy as np
 
 print("Imports finished")
@@ -159,7 +159,7 @@ def rotate_to_target(error):
 
 
 def tilt_to_target(error):
-    pixel_to_PWM_ratio = 10  # 0.1 PWM to 10 pixels guess
+    pixel_to_PWM_ratio = 5  # 0.1 PWM to 10 pixels guess
 
     print("Tilt error unaltered")
     print(error)

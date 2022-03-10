@@ -70,7 +70,7 @@ def catchall_tracking_signals_handler(what, confidence, region, track):
 
 
 class TrackingService:  # helper class to run dbus in background
-    def __init__(self,callback):
+    def __init__(self, callback):
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
         self.callback = callback
         self.loop = GLib.MainLoop()
@@ -140,15 +140,18 @@ def init():
 
 
 def rotate_to_target(error):
-    if error <= 0:  # CCW
-        direction = 0
-    else:
+    step_factor = 1
+    if error >= 0:  # if error is positive
+        direction = 0  # CCW
+    else:           # if error is negative
         direction = 1  # CW
 
     error = abs(error)
-    if error > 10:
-        error = 10
-    print("Rotate error = ", error)
+    error = step_factor * error
+    error = round(error)
+    """if error > 5:  # Not sure if this is needed
+        error = 5
+    print("Rotate error = ", error)"""
 
     if error > 2:
         stepper_spin(error, direction)
@@ -158,7 +161,7 @@ def rotate_to_target(error):
 
 def rotate_idle():
     search_step = 400
-    direction = 0
+    direction = 1
     stepper_spin(search_step, direction)
 
 
@@ -166,11 +169,11 @@ def calculate_error(region):
     # region = [x1,y1,x2,y2]
     half_frame_width = 90
     half_frame_height = 60
-    error_hor = half_frame_width - ((region[0] + region[2])/2)  # higher is right brackets
-    # error_hor right is -, left is +
-    error_vert = half_frame_height - ((region[1] + region[3])/2)  # higher is down brackets
+    error_hor = (half_frame_width - ((region[0] + region[2])/2))*-1  # higher is right brackets
+    # error_hor right is +, left is -
+    error_vert = (half_frame_height - ((region[1] + region[3])/2))*-1  # higher is up brackets
     # error_vert up is +, down is -
-    print(error_hor, error_vert)
+    print("hor = ", error_hor, "vert = ", error_vert)
     return error_hor, error_vert
 
 
@@ -216,7 +219,7 @@ if __name__ == "__main__":
                     #print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
                     # error_vert_angle = 0
-                    # rotate_to_target(error_hor_angle)
+                    rotate_to_target(error_hor_angle)
                     # tilt(error_vert_angle)
                     time.sleep(0.5)
                     '''if new_video_out_object_needed == 1:

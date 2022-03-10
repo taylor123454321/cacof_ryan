@@ -139,7 +139,7 @@ def init():
 
 
 def rotate_to_target(error):
-    step_factor = 2
+    step_factor = 3
     if error >= 0:  # if error is positive
         direction = 0  # CCW
     else:           # if error is negative
@@ -193,7 +193,7 @@ def calculate_error(region):
     half_frame_height = 60
     error_hor = (half_frame_width - ((region[0] + region[2])/2))*1  # higher is right brackets
     # error_hor right is +, left is -
-    error_vert = (half_frame_height - ((region[1] + region[3])/2))*-1  # higher is up brackets
+    error_vert = (half_frame_height - ((region[1] + region[3])/2))*1  # higher is up brackets
     # error_vert up is +, down is -
     print("hor = ", error_hor, "vert = ", error_vert)
     return error_hor, error_vert

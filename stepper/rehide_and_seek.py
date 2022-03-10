@@ -179,7 +179,7 @@ def tilt_to_target(error):
         print("OUT OF BOUNDS TILT")
 
     if abs(error) > 20:
-        p.ChangeDutyCycle(MID_PW + error)
+        pi.set_servo_pulsewidth(servoPIN, MID_PW + error)
         # time.sleep(0.1)
     else:
         print("Too small to tilt")

@@ -35,10 +35,10 @@ region_global = [0]*4  # Array for centroid of pest
 
 """Init for PIGPIO for servo/tilt"""
 print("Init GPIO start")
-#servoPIN = 17  # pin 11 on RPI
+servoPIN = 17  # pin 11 on RPI
 pi = pigpio.pi()
-"""pulsewidth = MID_PW
-pi.set_servo_pulsewidth(servoPIN, pulsewidth)"""
+pulsewidth = MID_PW
+pi.set_servo_pulsewidth(servoPIN, pulsewidth)
 
 """Init for PIGPIO for stepper driver"""
 stepPIN = 27  # pin 13 on RPI
@@ -124,8 +124,7 @@ def init():
     time.sleep(time_delay)
     stepper_spin(500, 1)
     pi.write(enablePIN, 1)
-    time.sleep(time_delay)
-    """
+    # time.sleep(time_delay)
     # Tilt servo
     time.sleep(time_delay)
     print("Attempting servo init tilt")
@@ -136,11 +135,11 @@ def init():
     pi.set_servo_pulsewidth(servoPIN, MAX_PW)
     time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MID_PW)
-    time.sleep(time_delay)"""
+    time.sleep(time_delay)
 
 
 def rotate_to_target(error):
-    step_factor = 1
+    step_factor = 2
     if error >= 0:  # if error is positive
         direction = 0  # CCW
     else:           # if error is negative
@@ -153,16 +152,44 @@ def rotate_to_target(error):
         error = 5
     print("Rotate error = ", error)"""
 
-    if error > 2:
-        stepper_spin(error, direction)
+    # if error > 2:
+    stepper_spin(error, direction)
+    """else:
+        print("Too small to rotate")"""
+
+
+def tilt_to_target(error):
+    pixel_to_PWM_ratio = 10  # 0.1 PWM to 10 pixels guess
+
+    print("Tilt error unaltered")
+    print(error)
+    error = pixel_to_PWM_ratio * error
+    print("Tilt error altered")
+    print(error)
+
+    """if error > 1:
+        error = 1
+        print("Error clipped high, {error}")
+    elif error < -1:
+        error = -1
+        print("Error clipped low, {error}")"""
+
+    if (MID_PW + error) > MAX_PW or (MID_PW + error) < MIN_PW:
+        error = 0
+        print("OUT OF BOUNDS TILT")
+
+    if abs(error) > 20:
+        p.ChangeDutyCycle(MID_PW + error)
+        # time.sleep(0.1)
     else:
-        print("Too small to rotate")
+        print("Too small to tilt")
 
 
 def rotate_idle():
     search_step = 400
-    direction = 1
+    direction = 0
     stepper_spin(search_step, direction)
+    pi.set_servo_pulsewidth(servoPIN, MID_PW)
 
 
 def calculate_error(region):
@@ -216,11 +243,10 @@ if __name__ == "__main__":
                     #new_video_out_object_needed = 1
                     print("Rotating idle, looking for target")
                 else:  # Pest has been found, aim at target and record video
-                    #print("Target found")
+                    print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
-                    # error_vert_angle = 0
                     rotate_to_target(error_hor_angle)
-                    # tilt(error_vert_angle)
+                    tilt_to_target(error_vert_angle)
                     time.sleep(0.5)
                     '''if new_video_out_object_needed == 1:
                         #out = get_video_output(out)

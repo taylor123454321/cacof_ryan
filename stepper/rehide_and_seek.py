@@ -112,7 +112,7 @@ def stepper_step(steps):
     for i in range(steps):
         pi.write(stepPIN, bit)
         bit = 1 - bit  # Swap value from 1 to 0 to 1 etc
-        time.sleep(0.001)  # 0.001 = 2RPM or 35s cycle time
+        time.sleep(0.005)  # 0.001 = 2RPM or 35s cycle time
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -148,7 +148,7 @@ def init():
 
 
 def rotate_to_target(error):
-    step_factor = 1.5
+    step_factor = 3
     if error >= 0:  # if error is positive
         direction = 0  # CCW
     else:           # if error is negative

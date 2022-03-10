@@ -53,23 +53,29 @@ print("Init PIGPIO finished")
 
 
 def catchall_tracking_signals_handler(what, confidence, region, track):
-    print(
+    '''print(
         "What = " + what,
         confidence,
         "% at ",
         region[0], region[1], region[2], region[3],
         " track = ",
         track,
-    )
+    )'''
     what = str(what)
-    print("string type = ", type(what))
+    #print("string type = ", type(what))
     global status
     global region_global
-    if what != 'false_positives':
+    if what != 'false-positives':
+        print(what)
         status = track
+        region_global = region
     else:
         status = 0
-    region_global = region
+        region_global = [0]*4
+
+    if track == 0:
+        status = 0
+        region_global = [0]*4
 
 
 class TrackingService:  # helper class to run dbus in background

@@ -53,15 +53,16 @@ print("Init PIGPIO finished")
 
 
 def catchall_tracking_signals_handler(what, confidence, region, track):
-    """print(
+    print(
         "What = " + what,
         confidence,
         "% at ",
         region[0], region[1], region[2], region[3],
         " track = ",
         track,
-    )"""
-    print("string = ", type(what))
+    )
+    what = str(what)
+    print("string type = ", type(what))
     global status
     global region_global
     if what != 'false_positives':

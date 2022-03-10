@@ -148,7 +148,7 @@ def init():
 
 
 def rotate_to_target(error):
-    step_factor = 3
+    step_factor = 1.5
     if error >= 0:  # if error is positive
         direction = 0  # CCW
     else:           # if error is negative

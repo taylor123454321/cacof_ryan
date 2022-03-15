@@ -246,6 +246,7 @@ if __name__ == "__main__":
                     # rotate_idle()
                     # new_video_out_object_needed = 1
                     print("Rotating idle, looking for target")
+                    time.sleep(4)
                 else:  # Pest has been found, aim at target and record video
                     # print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)

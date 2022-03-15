@@ -159,10 +159,6 @@ def rotate_to_target(error):
     error = step_factor * error
     error = round(error)
 
-    """if error > 5:  # Not sure if this is needed
-        error = 5
-    print("Rotate error = ", error)"""
-
     if error > 5:
         stepper_spin(error, direction)
     """else:
@@ -170,7 +166,7 @@ def rotate_to_target(error):
 
 
 def tilt_to_target(error):
-    pixel_to_PWM_ratio = 2  # 0.1 PWM to 10 pixels guess
+    pixel_to_PWM_ratio = 4  # 0.1 PWM to 10 pixels guess
     error = pixel_to_PWM_ratio * error
 
     """if error > 1:
@@ -200,9 +196,9 @@ def rotate_idle():
 
 def calculate_error(region):
     # region = [x1,y1,x2,y2]
-    half_frame_width = 90
-    half_frame_height = 60
-    print("x1 = ", region[0], "x2 = ", region[2])
+    half_frame_width = 80  # 160 wide
+    half_frame_height = 60  # 120 high
+    print("avg = ", (region[0] + region[2])/2)
     error_hor = (half_frame_width - ((region[0] + region[2])/2))*1  # higher is right brackets
     # error_hor right is +, left is -
     error_vert = (half_frame_height - ((region[1] + region[3])/2))*1  # higher is up brackets
@@ -249,7 +245,7 @@ if __name__ == "__main__":
                     # rotate_idle()
                     # new_video_out_object_needed = 1
                     print("Rotating idle, looking for target")
-                    time.sleep(4)
+                    time.sleep(1)
                 else:  # Pest has been found, aim at target and record video
                     # print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)

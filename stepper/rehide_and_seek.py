@@ -116,6 +116,7 @@ def stepper_step(steps):
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
+    print("stepper_spin. steps = ", steps, "dir = ", direct)
     if direct <= 0:
         pi.write(dirPIN, 0)  # CCW
         stepper_step(steps)
@@ -155,8 +156,12 @@ def rotate_to_target(error):
         direction = 1  # CW
 
     error = abs(error)
+    print("abs error = ", error)
     error = step_factor * error
+    print("factor error = ", error)
     error = round(error)
+    print("round error = ", error)
+
     """if error > 5:  # Not sure if this is needed
         error = 5
     print("Rotate error = ", error)"""

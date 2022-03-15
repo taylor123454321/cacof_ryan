@@ -148,15 +148,18 @@ def init():
     time.sleep(time_delay)
 
 
-def rotate_to_target(error):
-    step_factor = 4
+def rotate_to_target(error, error_last):
+    k_proportional = 40
+    """k_derivative = 1
+    time_step = 0.5
+    delta_error = error_last - error"""
     if error >= 0:  # if error is positive
         direction = 0  # CCW
     else:           # if error is negative
         direction = 1  # CW
 
     error = abs(error)
-    error = step_factor * error
+    error = k_proportional * error
     error = round(error)
 
     if error > 5:
@@ -166,8 +169,9 @@ def rotate_to_target(error):
 
 
 def tilt_to_target(error):
-    pixel_to_PWM_ratio = 40  # 0.1 PWM to 10 pixels guess
-    error = pixel_to_PWM_ratio * error
+    k_proportional = 4  # 0.1 PWM to 10 pixels guess
+
+    error = k_proportional * error
 
     """if error > 1:
         error = 1
@@ -223,6 +227,9 @@ if __name__ == "__main__":
             # start_time = time.time()
             pi.write(enablePIN, 0)  # Enable stepper driver
             status = 0
+            error_hor_angle = 0
+            error_hor_angle_last = 0
+            error_vert_angle = 0
 
             while 1:
                 # print(status, count)
@@ -249,7 +256,8 @@ if __name__ == "__main__":
                 else:  # Pest has been found, aim at target and record video
                     # print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
-                    rotate_to_target(error_hor_angle)
+                    rotate_to_target(error_hor_angle, error_hor_angle_last)
+                    error_hor_angle_last = error_hor_angle
                     tilt_to_target(error_vert_angle)
                     time.sleep(0.5)
                     '''if new_video_out_object_needed == 1:

@@ -163,8 +163,8 @@ def rotate_to_target(error):
         error = 5
     print("Rotate error = ", error)"""
 
-    # if error > 2:
-    stepper_spin(error, direction)
+    if error > 5:
+        stepper_spin(error, direction)
     """else:
         print("Too small to rotate")"""
 

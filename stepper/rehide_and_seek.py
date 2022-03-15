@@ -166,7 +166,7 @@ def rotate_to_target(error):
 
 
 def tilt_to_target(error):
-    pixel_to_PWM_ratio = 4  # 0.1 PWM to 10 pixels guess
+    pixel_to_PWM_ratio = 40  # 0.1 PWM to 10 pixels guess
     error = pixel_to_PWM_ratio * error
 
     """if error > 1:

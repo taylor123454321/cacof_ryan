@@ -62,11 +62,11 @@ def catchall_tracking_signals_handler(what, confidence, region, track):
         track,
     )'''
     what = str(what)
-    #print("string type = ", type(what))
+    # print("string type = ", type(what))
     global status
     global region_global
     if what != 'false-positives':
-        print(what)
+        print(what, confidence)
         status = track
         region_global = region
     else:
@@ -187,8 +187,8 @@ def tilt_to_target(error):
     if abs(error) > 5:
         pi.set_servo_pulsewidth(servoPIN, MID_PW + error)
         # time.sleep(0.1)
-    """else:
-        print("Too small to tilt")"""
+    else:
+        print("Too small to tilt")
 
 
 def rotate_idle():
@@ -202,6 +202,7 @@ def calculate_error(region):
     # region = [x1,y1,x2,y2]
     half_frame_width = 90
     half_frame_height = 60
+    print("x1 = ", region[0], "x2 = ", region[2])
     error_hor = (half_frame_width - ((region[0] + region[2])/2))*1  # higher is right brackets
     # error_hor right is +, left is -
     error_vert = (half_frame_height - ((region[1] + region[3])/2))*1  # higher is up brackets

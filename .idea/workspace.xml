@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc50a8f5-6156-46aa-b1c7-40380bc8e168" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file_transfer/incv3-17022022neural/saved_model.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/file_transfer/incv3-17022022neural/saved_model.mapping" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/file_transfer/incv3-17022022neural/saved_model.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/file_transfer/incv3-17022022neural/saved_model.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/stepper/rehide_and_seek.py" beforeDir="false" afterPath="$PROJECT_DIR$/stepper/rehide_and_seek.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

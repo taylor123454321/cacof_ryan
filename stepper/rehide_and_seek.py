@@ -243,8 +243,8 @@ if __name__ == "__main__":
                     print(status)"""
 
                 if status == 0:
-                    rotate_idle()
-                    #new_video_out_object_needed = 1
+                    # rotate_idle()
+                    # new_video_out_object_needed = 1
                     print("Rotating idle, looking for target")
                 else:  # Pest has been found, aim at target and record video
                     # print("Target found")

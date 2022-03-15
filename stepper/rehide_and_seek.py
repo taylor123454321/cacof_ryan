@@ -187,8 +187,8 @@ def tilt_to_target(error):
     if abs(error) > 5:
         pi.set_servo_pulsewidth(servoPIN, MID_PW + error)
         # time.sleep(0.1)
-    else:
-        print("Too small to tilt")
+    """else:
+        print("Too small to tilt")"""
 
 
 def rotate_idle():

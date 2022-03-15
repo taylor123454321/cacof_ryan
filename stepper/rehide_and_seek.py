@@ -149,7 +149,7 @@ def init():
 
 
 def rotate_to_target(error, error_last):
-    k_proportional = 40
+    k_proportional = 20
     """k_derivative = 1
     time_step = 0.5
     delta_error = error_last - error"""

@@ -3,10 +3,6 @@ print("Imports started")
 import time
 import board
 
-"""Stepper motor library import"""
-from adafruit_motor import stepper
-from adafruit_motorkit import MotorKit 
-
 """Servo library import"""
 import pigpio
 
@@ -27,62 +23,74 @@ from gi.repository import GLib
 import dbus
 import dbus.mainloop.glib
 
+
 print("Imports finished")
 
-error_angle = 0
+"""error_angle = 0
 
 MIN_PW = 1100
 MID_PW = 1300
 MAX_PW = 1500
 
 status = 0  # 0 is if no pest found, 1 if pest is found
-region_global = [0]*4 # Array for centroid of pest
+region_global = [0]*4  # Array for centroid of pest
+"""
 
-
-"""Init for GPIO for servo/tilt"""
+"""Init for PIGPIO for servo/tilt"""
 print("Init GPIO start")
-servoPIN = 17  # pin 11 on RPI
+#servoPIN = 17  # pin 11 on RPI
 pi = pigpio.pi()
-pulsewidth = MID_PW
-pi.set_servo_pulsewidth(servoPIN, pulsewidth)
-print("Init GPIO finished")
+"""pulsewidth = MID_PW
+pi.set_servo_pulsewidth(servoPIN, pulsewidth)"""
+
+"""Init for PIGPIO for stepper driver"""
+stepPIN = 27  # pin 13 on RPI
+dirPIN = 22  # pin 15 on RPI
+enablePIN = 23  # pin 16 on RPI
+pi.set_mode(stepPIN, pigpio.INPUT)
+pi.set_mode(dirPIN, pigpio.INPUT)
+pi.set_mode(enablePIN, pigpio.INPUT)
+
+
+print("Init PIGPIO finished")
 
 """OpenCV init camera"""
-# Create a VideoCapture object
+"""# Create a VideoCapture object
 print("Init camera start")
 cap = cv2.VideoCapture(0)
 
 # Check if camera opened successfully
-if cap.isOpened() == False:
+if cap.isOpened() is False:
     print("Unable to read camera feed")
 
 # Default resolutions of the frame are obtained.The default resolutions are system dependent.
 # We convert the resolutions from float to integer.
 frame_width = int(cap.get(3))
-frame_height = int(cap.get(4))
+frame_height = int(cap.get(4))"""
 
-print("Init camera finished")
+#print("Init camera finished")
 
 """DBUS init"""
 print("Init dbus start")
+
+
 def handler(sender=None):
     print("got signal from %r" % sender)
 
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
     print(
-        "Received a trackng signal," + what,
+        "Received a tracking signal," + what,
         confidence,
         "% at ",
         region,
         " tracking?",
         tracking,
     )
-    status = tracking
-    region_global = region
-    
-    
-    
+    #status = tracking
+    #region_global = region
+
+
 global object
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 loop = GLib.MainLoop()
@@ -98,38 +106,46 @@ bus.add_signal_receiver(
     dbus_interface=DBUS_NAME,
     signal_name="Tracking",
     )
-print("Init dbus finishsed")
+print("Init dbus finished")
+
+
+def stepper_step(steps):
+    bit = 0
+    for i in range(steps):
+        pi.write(stepPIN, bit)
+        bit = 1 - bit  # Swap value from 1 to 0 to 1 etc
+        time.sleep(0.005)  # 0.001 = 2RPM or 35s cycle time
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
-    kit = MotorKit(i2c=board.I2C())  # Init stepper
     if direct <= 0:
-        for i in range(steps):
-            kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.MICROSTEP)
-            # time.sleep(0.01)
+        pi.write(dirPIN, 0)  # CCW
+        stepper_step(steps)
     else:
-        for i in range(steps):
-            kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.MICROSTEP)
-            # time.sleep(0.01)
-    # time.sleep(4)
-    kit.stepper1.release()  # Close stepper or else it makes noise
+        pi.write(dirPIN, 1)  # CW
+        stepper_step(steps)
 
 
 def init():
     # Spin stepper
+    time_delay = 1
+    pi.write(enablePIN, 0)
     print("Attempting stepper init spin")
-    stepper_spin(50, 0)
+    stepper_spin(500, 0)
+    time.sleep(time_delay)
+    stepper_spin(500, 1)
+    pi.write(enablePIN, 1)
     # Tilt servo
-    time.sleep(2)
+    time.sleep(time_delay)
     print("Attempting servo init tilt")
     pi.set_servo_pulsewidth(servoPIN, MID_PW)
-    time.sleep(2)
+    time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MIN_PW)
-    time.sleep(2)
+    time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MAX_PW)
-    time.sleep(2)
+    time.sleep(time_delay)
     pi.set_servo_pulsewidth(servoPIN, MID_PW)
-    time.sleep(2)
+    time.sleep(time_delay)
 
 
 def rotate_to_target(error):
@@ -141,7 +157,7 @@ def rotate_to_target(error):
     error = abs(error)
     if error > 10:
         error = 10
-    print("Rotate error = {error}")
+    print("Rotate error = ", error)
 
     if error > 2:
         stepper_spin(error, direction)
@@ -180,8 +196,8 @@ def tilt(error):
 
 
 def rotate_idle():
-    search_step = 400  # 10 terns = half rotation, 2 turns = 11s
-    direction = 0  # Camera overlap
+    search_step = 400
+    direction = 0
     stepper_spin(search_step, direction)
 
 
@@ -202,47 +218,67 @@ def record_video(out):
 
 
 def get_video_output(out=None):
-    #Specify the path and name of the video file as well as the encoding, fps and resolution
+    # Specify the path and name of the video file as well as the encoding, fps and resolution
     if out:
         out.release()
-    return cv2.VideoWriter('video/test ' + str(time.strftime('%d_%m_%Y_%H_%M_%S')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 24, (frame_width, frame_height))
+    return cv2.VideoWriter('video/test ' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
+    # (YYYY-MM-DD_HR.MIN.SEC_CAMERA_ID)., was '%d_%m_%Y_%H_%M_%S'
 
 
 try:
     init()
-    new_video_out_object = 0
-    out = get_video_output()
+    #new_video_out_object_needed = 0
+    #out = get_video_output()
     count = 0
+    #total_time = time.time()
+    #start_time = time.time()
+    pi.write(enablePIN, 0)  # Enable stepper driver
+    status = 0
 
     while 1:
         print(status, count)
         #status = 0
         count += 1
-        if count == 400:
+        """if count == 30:
             status = 1
+            print(status)
         elif count == 500:
             status = 0
+            print(status)
+        elif count == 530:
+            status = 1
+            print(status)
         elif count == 700:
-            status = 1    
-        elif count == 800:
             status = 0
+            print(status)"""
             
         if status == 0:
             #rotate_idle()
             new_video_out_object_needed = 1
             print("Rotating idle, looking for target")
         else:  # Pest has been found, aim at target and record video
-            #error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
+            # error_hor_angle, error_vert_angle = calculate_horizontal_error(region_global)
             # error_vert_angle = 0
-            #rotate_to_target(error_hor_angle)
+            # rotate_to_target(error_hor_angle)
             # tilt(error_vert_angle)
             if new_video_out_object_needed == 1:
-                out = get_video_output(out)
+                #out = get_video_output(out)
                 new_video_out_object_needed = 0
-            record_video(out)
+                #start_time = time.time()
+            #record_video(out)
             print("Target found")
+
+            total_time = time.time() - start_time
+            if total_time >= 30:
+                new_video_out_object_needed = 1
+                start_time = time.time()
+                print("Max USB video time reached\nSet new video flag")
 except KeyboardInterrupt:
+    pi.write(stepPIN, 0)
+    pi.write(enablePIN, 1)
     pi.stop()
-    cap.release()
-    out.release()
-    # kit.stepper1.release()
+    #tracking.quit()
+    #cap.release()
+    #out.release()
+
+

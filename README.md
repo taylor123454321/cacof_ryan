@@ -5,7 +5,7 @@ sudo pip3 install adafruit-circuitpython-motorkit
 sudo apt-get install pigpio python-pigpio python3-pigpio
 sudo apt-get install python3-opencv
 
-Run on start up
+Run on start up. Added to start up scrip, run if not Ryan.
 sudo pigpiod
 
 

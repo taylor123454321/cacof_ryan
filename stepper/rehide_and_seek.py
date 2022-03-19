@@ -18,7 +18,7 @@ import board
 import pigpio
 
 """OpenCV library import"""
-import cv2
+# import cv2
 import numpy as np
 
 print("Imports finished")
@@ -52,7 +52,7 @@ pi.set_mode(enablePIN, pigpio.INPUT)
 print("Init PIGPIO finished")
 
 """OpenCV init camera"""
-# Create a VideoCapture object
+""""# Create a VideoCapture object
 print("Init camera start")
 cap = cv2.VideoCapture(0)
 
@@ -65,17 +65,17 @@ if cap.isOpened() is False:
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 
-print("Init camera finished")
+print("Init camera finished")"""
 
 def catchall_tracking_signals_handler(what, confidence, region, track):
-    '''print(
+    """print(
         "What = " + what,
         confidence,
         "% at ",
         region[0], region[1], region[2], region[3],
         " track = ",
         track,
-    )'''
+    )"""
     what = str(what)
     # print("string type = ", type(what))
     global status
@@ -226,7 +226,7 @@ def calculate_error(region):
     return error_hor, error_vert
 
 
-def record_video(out):
+"""def record_video(out):
     ret, frame = cap.read()
     if ret:
         # Write the frame into the file 'output.avi'
@@ -239,7 +239,7 @@ def get_video_output(out=None):
     if out:
         out.release()
     return cv2.VideoWriter('video/test ' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
-    # (YYYY-MM-DD_HR.MIN.SEC_CAMERA_ID)., was '%d_%m_%Y_%H_%M_%S'
+    # (YYYY-MM-DD_HR.MIN.SEC_CAMERA_ID)., was '%d_%m_%Y_%H_%M_%S'"""
 
 
 if __name__ == "__main__":
@@ -263,21 +263,7 @@ if __name__ == "__main__":
             error_vert_angle = 0
 
             while 1:
-                print(status, count)
-                # status = 1
-                count += 1
-                if count == 30:
-                    status = 1
-                    print(status)
-                elif count == 500:
-                    status = 0
-                    print(status)
-                elif count == 530:
-                    status = 1
-                    print(status)
-                elif count == 700:
-                    status = 0
-                    print(status)
+                # print(status, count)
 
                 if status == 0:
                     # rotate_idle()
@@ -291,18 +277,19 @@ if __name__ == "__main__":
                     error_hor_angle_last = error_hor_angle
                     tilt_to_target(error_vert_angle)
                     time.sleep(0.5)
-                    if new_video_out_object_needed == 1:
+                    """if new_video_out_object_needed == 1:
                         out = get_video_output(out)
                         new_video_out_object_needed = 0
                         start_time = time.time()
-                    record_video(out)
-                    print("Target found")
+                    # record_video(out)
 
                     total_time = time.time() - start_time
                     if total_time >= 30:
                         new_video_out_object_needed = 1
                         start_time = time.time()
                         print("Max USB video time reached\nSet new video flag")
+                if status == 1:
+                    record_video(out)"""
         except KeyboardInterrupt:
             pi.write(stepPIN, 0)
             pi.write(enablePIN, 1)

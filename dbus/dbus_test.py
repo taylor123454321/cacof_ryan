@@ -10,41 +10,55 @@ from gi.repository import GLib
 
 import dbus
 import dbus.mainloop.glib
-
-
-def handler(sender=None):
-    print("got signal from %r" % sender)
-
+import time
+import threading
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
     print(
-        "Received a trackng signal and it says " + what,
+        "What =  " + what,
         confidence,
         "% at ",
-        region,
+        region[0], region[1], region[2], region[3],
         " tracking?",
         tracking,
     )
 
 
+
+# helper class to run dbus in background
+class TrackingService:
+    def __init__(self,callback):
+        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+        self.callback = callback
+        self.loop = GLib.MainLoop()
+        self.t = threading.Thread(
+            target=self.run_server,
+        )
+        self.t.start()
+
+    def quit(self):
+        self.loop.quit()
+
+    def run_server(self):
+        try:
+            bus = dbus.SystemBus()
+            object = bus.get_object(DBUS_NAME, DBUS_PATH)
+        except dbus.exceptions.DBusException as e:
+            print("Failed to initialize D-Bus object: '%s'" % str(e))
+            sys.exit(2)
+
+        bus.add_signal_receiver(
+            self.callback,
+            dbus_interface=DBUS_NAME,
+            signal_name="Tracking",
+        )
+        self.loop.run()
+
 if __name__ == "__main__":
-    global object
-    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-    loop = GLib.MainLoop()
-    try:
-        bus = dbus.SystemBus()
-        object = bus.get_object(DBUS_NAME, DBUS_PATH)
-    except dbus.exceptions.DBusException as e:
-        print("Failed to initialize D-Bus object: '%s'" % str(e))
-        sys.exit(2)
+    tracking = TrackingService(catchall_tracking_signals_handler)
 
-    bus.add_signal_receiver(
-        catchall_tracking_signals_handler,
-        dbus_interface=DBUS_NAME,
-        signal_name="Tracking",
-    )
 
-    # GLib.timeout_add(1000, make_calls)
-    print("hi")
-
-    loop.run()
+    # just to keep program alive
+    # replace with your code
+    while tracking.t.is_alive():
+        time.sleep(1)

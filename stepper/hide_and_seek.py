@@ -248,14 +248,13 @@ if __name__ == "__main__":
     # replace with your code
     count = 1
     while tracking.t.is_alive():
-
         try:
             init()
-            new_video_out_object_needed = 0
-            out = get_video_output()
             count = 0
+            """new_video_out_object_needed = 0
+            out = get_video_output()
             total_time = time.time()
-            start_time = time.time()
+            start_time = time.time()"""
             pi.write(enablePIN, 0)  # Enable stepper driver
             status = 0
             error_hor_angle = 0
@@ -295,5 +294,5 @@ if __name__ == "__main__":
             pi.write(enablePIN, 1)
             pi.stop()
             tracking.quit()
-            cap.release()
-            out.release()
+            #cap.release()
+            #out.release()

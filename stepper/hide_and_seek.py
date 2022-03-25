@@ -268,7 +268,7 @@ if __name__ == "__main__":
             while 1:
                 # print(status, count)
                 move_time = time.time() - start_move_time
-                status = 1
+                # status = 1
 
                 if status == 0:
                     rotate_idle()

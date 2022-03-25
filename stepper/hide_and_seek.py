@@ -264,22 +264,21 @@ if __name__ == "__main__":
             error_vert_angle = 0
 
             while 1:
-                #print(status, count)
+                # print(status, count)
                 move_time = time.time() - start_move_time
                 status = 1
 
                 if status == 0:
-                    # rotate_idle()
+                    rotate_idle()
                     new_video_out_object_needed = 1
                     print("Rotating idle, looking for target")
                     time.sleep(1)
                 elif move_time > 0.5:  # Pest has been found, aim at target and record video
                     print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
-                    # rotate_to_target(error_hor_angle, error_hor_angle_last)
-                    # error_hor_angle_last = error_hor_angle
-                    # tilt_to_target(error_vert_angle)
-                    # time.sleep(0.5)
+                    rotate_to_target(error_hor_angle, error_hor_angle_last)
+                    error_hor_angle_last = error_hor_angle
+                    tilt_to_target(error_vert_angle)
                     start_move_time = time.time()
 
                     if new_video_out_object_needed == 1:
@@ -294,7 +293,6 @@ if __name__ == "__main__":
                         print("Max USB video time reached\nSet new video flag")
                     record_video(out)
                 else:
-                    #print("Record video statement")
                     record_video(out)
                 count += 1
         except KeyboardInterrupt:

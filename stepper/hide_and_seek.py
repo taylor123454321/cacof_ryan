@@ -219,12 +219,12 @@ def calculate_error(region):
     # region = [x1,y1,x2,y2]
     half_frame_width = 80  # 160 wide
     half_frame_height = 60  # 120 high
-    print("avg = ", (region[0] + region[2])/2)
+    # print("avg = ", (region[0] + region[2])/2)
     error_hor = (half_frame_width - ((region[0] + region[2])/2))*1  # higher is right brackets
     # error_hor right is +, left is -
     error_vert = (half_frame_height - ((region[1] + region[3])/2))*1  # higher is up brackets
     # error_vert up is +, down is -
-    print("hor = ", error_hor, "vert = ", error_vert)
+    # print("hor = ", error_hor, "vert = ", error_vert)
     return error_hor, error_vert
 
 
@@ -276,7 +276,7 @@ if __name__ == "__main__":
                     print("Rotating idle, looking for target")
                     time.sleep(1)
                 elif move_time > 0.5:  # Pest has been found, aim at target and record video
-                    print("Target found")
+                    # print("Target found")
                     error_hor_angle, error_vert_angle = calculate_error(region_global)
                     rotate_to_target(error_hor_angle, error_hor_angle_last)
                     error_hor_angle_last = error_hor_angle

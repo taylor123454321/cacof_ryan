@@ -80,13 +80,15 @@ def catchall_tracking_signals_handler(what, confidence, region, track):
     # print("string type = ", type(what))
     global status
     global region_global
-    if what != 'false-positives':
+    """if what != 'false-positives':
         print(what, confidence)
         status = track
         region_global = region
     else:
         status = 0
-        region_global = [0]*4
+        region_global = [0]*4"""
+    status = track
+    region_global = region
 
     if track == 0:
         status = 0

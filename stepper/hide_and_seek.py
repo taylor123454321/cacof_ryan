@@ -133,7 +133,7 @@ def stepper_step(steps):
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
-    print("stepper_spin. steps = ", steps, "dir = ", direct)
+    # print("stepper_spin. steps = ", steps, "dir = ", direct)
     if direct <= 0:
         pi.write(dirPIN, 0)  # CCW
         stepper_step(steps)

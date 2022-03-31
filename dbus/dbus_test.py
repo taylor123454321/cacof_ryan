@@ -56,9 +56,11 @@ class TrackingService:
 
 if __name__ == "__main__":
     tracking = TrackingService(catchall_tracking_signals_handler)
-
+    count =0
 
     # just to keep program alive
     # replace with your code
     while tracking.t.is_alive():
         time.sleep(1)
+        count +=1
+        print(count)

@@ -7,6 +7,11 @@ sudo apt-get install python3-opencv
 Run on start up. Added to start up scrip, run if not Ryan.
 sudo pigpiod
 
+Code to add to 'sudo crontab -e'
+@reboot sudo pigpiod
+@reboot sudo python3 /bin/cv_write_test_multi.py
+
+
 
 Restart camera AI software
 sudo systemctl restart classifier.service

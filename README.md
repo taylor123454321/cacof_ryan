@@ -31,3 +31,6 @@ localhost.local
 Update permissions for all files
 sudo chmod -R u=rwx,g=wrx,o=rwx cacof_ryan/
 
+View and convert CPTV to mp4
+https://thecacophonyproject.github.io/
+

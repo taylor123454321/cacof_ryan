@@ -34,6 +34,6 @@ sudo chmod -R u=rwx,g=wrx,o=rwx cacof_ryan/
 View and convert CPTV to mp4
 https://thecacophonyproject.github.io/
 
-sudo cp sweep_stepper.py ../../bin
+sudo cp sweep_stepper.py ../../../../../bin
 
 

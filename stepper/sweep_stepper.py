@@ -23,7 +23,7 @@ def stepper_step(steps):
     for i in range(steps):
         pi.write(stepPIN, bit)
         bit = 1 - bit  # Swap value from 1 to 0 to 1 etc
-        time.sleep(0.001)  # 0.001 = 2RPM or 35s cycle time
+        time.sleep(0.01)  # 0.001 = 2RPM or 35s cycle time
 
 
 def stepper_spin(steps, direct):  # Function to control stepper motor
@@ -37,22 +37,22 @@ def stepper_spin(steps, direct):  # Function to control stepper motor
 
 
 try:
-    time.sleep(40)  # Initial delay for camera to start
+    time.sleep(4)  # Initial delay for camera to start
     pi.write(enablePIN, 0)  # Enable stepper driver
     steps_for_sweep = 3000  # Enough steps for 30 degrees
     sweep_end_time = 2  # Time at the end of sweep
-    max_time = 60*30
-    start_time = time.time()
+    #max_time = 60*30
+    #start_time = time.time()
     while 1:
         stepper_spin(steps_for_sweep, 0)
         time.sleep(sweep_end_time)
         stepper_spin(steps_for_sweep, 1)
         time.sleep(sweep_end_time)
         print("Stepped")
-        move_time = time.time() - start_time
+        '''move_time = time.time() - start_time
         if move_time > max_time:
             print("End of time")
-            break
+            break'''
 except KeyboardInterrupt:
     pi.write(stepPIN, 0)
     pi.write(enablePIN, 1)

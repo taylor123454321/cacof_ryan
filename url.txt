@@ -20,5 +20,3 @@ https://drive.google.com/file/d/1wWZxRAtCIjs6cEBbUeT2nf_-Y7BhIf7s/view?usp=shari
 
 
 
-sudo mount /dev/sda1 /media/usb -o uid=pi2,gid=pi2
-sudo umount /media/usb

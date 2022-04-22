@@ -20,7 +20,7 @@ region_global = [0]*4  # Array for centroid of pest
 
 def catchall_tracking_signals_handler(what, confidence, region, track):
     print(
-        "What =  " + what,
+        "What," + what,
         confidence,
         "% at ",
         region[0], region[1], region[2], region[3],
@@ -69,6 +69,10 @@ class TrackingService:
         )
         self.loop.run()
 
+
+f = open(str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + ".txt", "w")
+
+
 if __name__ == "__main__":
     tracking = TrackingService(catchall_tracking_signals_handler)
 
@@ -76,22 +80,24 @@ if __name__ == "__main__":
     # replace with your code
     while tracking.t.is_alive():
         try:
-            f = open(str(time.strftime('%Y-%m-%d_%H_Turret1')) + ".txt", "w")
+            
             # f = open("~/home/pi/Documents/logs/" + str(time.strftime('%Y-%m-%d_%H_Turret1')) + ".txt", "w")
             #  f = open("D:\\myfiles\welcome.txt", "r")
             count = 0
             while 1:
                 if status == 1:
+                    print("Status = ", status, "Count = ", count)
                     if count <= 0:
                         f.write(str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1\n')))
                         count = 5
                     else:
                         count = count - 1
                     print(count)
-                    f.write("Status = " + status + " What = " + what_thing + " Here, " + region_global + "\n")
+                    f.write("What, " + what_thing + " Here, " + str(region_global[0]) + str(region_global[1]) + str(region_global[2]) + str(region_global[3]) + "\n")
                 time.sleep(1)
                 print("Slept")
 
         except KeyboardInterrupt:
             f.close()
+            break
 

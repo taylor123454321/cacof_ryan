@@ -4,6 +4,9 @@ Installs
 sudo apt-get install pigpio python-pigpio python3-pigpio
 sudo apt-get install python3-opencv
 
+Methods
+https://learn.adafruit.com/adding-a-real-time-clock-to-raspberry-pi/set-rtc-time
+
 Run on start up. Added to start up scrip, run if not added to crontab as below
 sudo pigpiod
 
@@ -42,6 +45,7 @@ sudo cp static_comp_IR_2022* ../../../../../media/usb/video
 
 Empty folder
 sudo rm *
+sudo rm static_comp_IR_2022-06-22_23*
 trash-empty
 
 Create USB mount point

@@ -39,6 +39,7 @@ https://thecacophonyproject.github.io/
 Copying commands
 Program to bin
 sudo cp sweep_stepper.py ../../../../../bin
+sudo cp cv_write_test_multi.py ../../../../../bin
 Videos to USB
 sudo cp static_comp_IR_2022* ../../../../../media/usb/video
 20220410.214721.645062.cptv

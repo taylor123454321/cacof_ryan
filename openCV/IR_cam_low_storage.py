@@ -19,38 +19,36 @@ import dbus.mainloop.glib
 import time
 import threading
 
-time_flag = False 
+# Set flag for only recoding at night
+time_flag = True # True enables recording at any time
 
 cap = cv2.VideoCapture(0)
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 
-def get_video_output(out=None):
+# Live tracking variables
+status = 0  # 0 is if no pest found, 1 if pest is found
+
+
+def get_video_output(out = None):
     #Specify the path and name of the video file as well as the encoding, fps and resolution
     if out:
         out.release()
-    return cv2.VideoWriter('video/static_comp_IR_ ' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
-    #return cv2.VideoWriter('../home/pi/Documents/video/static_comp_IR_ ' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
-
-
-
-
-
-
-
-
+    return cv2.VideoWriter('video/static_comp_IR_' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
+    #return cv2.VideoWriter('../home/pi/Documents/video/static_comp_IR_' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
 
 
 def catchall_tracking_signals_handler(what, confidence, region, tracking):
-    print(
+    """print(
         "What =  " + what,
         confidence,
         "% at ",
         region[0], region[1], region[2], region[3],
         " tracking?",
         tracking,
-    )
-
+    )"""
+    global status
+    status = track
 
 
 # helper class to run dbus in background
@@ -84,12 +82,13 @@ class TrackingService:
 
 if __name__ == "__main__":
     tracking = TrackingService(catchall_tracking_signals_handler)
-    count =0
 
     # just to keep program alive
     # replace with your code
     next_time = time.time() + 10  # 20
     out = get_video_output()
+    status = 0
+    
     while tracking.t.is_alive():
         try:
             while True:
@@ -104,7 +103,7 @@ if __name__ == "__main__":
 
                     # Capture frame-by-frame
                     ret, frame = cap.read()
-                    if ret:
+                    if ret & status == 1: # Will it work?
                         out.write(frame)
         except KeyboardInterrupt:
             cap.release()

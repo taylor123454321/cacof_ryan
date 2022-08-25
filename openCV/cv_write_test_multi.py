@@ -14,8 +14,8 @@ def get_video_output(out=None):
     #Specify the path and name of the video file as well as the encoding, fps and resolution
     if out:
         out.release()
-qer('video/static_comp_IR_ ' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
-    #return cv2.VideoWriter('../home/pi/Documents/video/static_comp_IR_ ' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
+qer('video/static_comp_IR_' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
+    #return cv2.VideoWriter('../home/pi/Documents/video/static_comp_IR_' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
 
 
 

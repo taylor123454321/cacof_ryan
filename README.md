@@ -14,6 +14,7 @@ Code to add to 'sudo crontab -e' for startup scripts
 @reboot sudo pigpiod
 @reboot sudo python3 /bin/cv_write_test_multi.py
 @reboot sudo python3 /bin/sweep_stepper.py
+@reboot sudo python3 /bin/IR_cam_low_storage.py
 
 
 Restart camera AI software
@@ -38,8 +39,9 @@ https://thecacophonyproject.github.io/
 
 Copying commands
 Program to bin
-sudo cp sweep_stepper.py ../../../../../bin
-sudo cp cv_write_test_multi.py ../../../../../bin
+sudo cp sweep_stepper.py ~/../../bin
+sudo cp cv_write_test_multi.py ~/../../bin
+sudo cp IR_cam_low_storage.py ~/../../bin
 Videos to USB
 sudo cp static_comp_IR_2022* ../../../../../media/usb/video
 20220410.214721.645062.cptv

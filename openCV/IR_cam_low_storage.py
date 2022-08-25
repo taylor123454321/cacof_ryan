@@ -48,7 +48,7 @@ def catchall_tracking_signals_handler(what, confidence, region, tracking):
         tracking,
     )"""
     global status
-    status = track
+    status = tracking
 
 
 # helper class to run dbus in background
@@ -96,14 +96,15 @@ if __name__ == "__main__":
                 # print(type(hour))
                 # print(hour)
                 if hour > 18 or hour < 7 or time_flag == True:
-                    if time.time() > next_time:
-                        next_time += 10  # 20
+                    if time.time() > next_time and status == 1:
+                        next_time += 20
                         out = get_video_output(out)
                         print("New video")
 
                     # Capture frame-by-frame
                     ret, frame = cap.read()
-                    if ret & status == 1: # Will it work?
+                    #print("status = ", status)
+                    if ret and status == 1: # Will it work?
                         out.write(frame)
         except KeyboardInterrupt:
             cap.release()

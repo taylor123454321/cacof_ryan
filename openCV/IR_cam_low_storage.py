@@ -37,6 +37,10 @@ with open(os.path.join(path, file_name), 'w') as fp:
     # uncomment below line if you want to create an empty file
     fp.write('Program started and wrote this line')
 
+with open(os.path.join(path, file_name), 'w') as fp:
+    # uncomment below line if you want to create an empty file
+    fp.write('second line')
+
 cap = cv2.VideoCapture(0)
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
@@ -114,7 +118,6 @@ if __name__ == "__main__":
                     if ret and status == 1:
                         out.write(frame)
         except KeyboardInterrupt:
-            print("reached except")
             cap.release()
             cv2.destroyAllWindows()
             sys.exit("End of program")

@@ -113,6 +113,8 @@ if __name__ == "__main__":
                     #print("status = ", status)
                     if ret and status == 1:
                         out.write(frame)
+            print("Above except")
         except KeyboardInterrupt:
+            print("reached except")
             cap.release()
             cv2.destroyAllWindows()

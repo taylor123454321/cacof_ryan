@@ -37,10 +37,6 @@ with open(os.path.join(path, file_name), 'w') as fp:
     # uncomment below line if you want to create an empty file
     fp.write('Program started and wrote this line')
 
-with open(os.path.join(path, file_name), 'a') as fp:
-    # uncomment below line if you want to create an empty file
-    fp.write('second line')
-
 cap = cv2.VideoCapture(0)
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
@@ -101,6 +97,9 @@ if __name__ == "__main__":
     status = 0
     
     while tracking.t.is_alive():
+        with open(os.path.join(path, file_name), 'a') as fp:
+            # uncomment below line if you want to create an empty file
+            fp.write('\nTracking started' + str(time.strftime('%Y-%m-%d_%H.%M.%S')))
         try:
             while True:
                 hour = int(time.strftime('%H'))

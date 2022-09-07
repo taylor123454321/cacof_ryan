@@ -37,7 +37,7 @@ with open(os.path.join(path, file_name), 'w') as fp:
     # uncomment below line if you want to create an empty file
     fp.write('Program started and wrote this line')
 
-with open(os.path.join(path, file_name), 'w') as fp:
+with open(os.path.join(path, file_name), 'a') as fp:
     # uncomment below line if you want to create an empty file
     fp.write('second line')
 

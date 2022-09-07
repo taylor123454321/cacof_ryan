@@ -95,14 +95,14 @@ if __name__ == "__main__":
     next_time = time.time() + video_length
     out = get_video_output()
     status = 0
-    
+
     while tracking.t.is_alive():
         try:
             while True:
                 if status == 1:
                     with open(os.path.join(path, file_name), 'a') as fp:
                         # uncomment below line if you want to create an empty file
-                        fp.write('\nTracking started' + str(time.strftime('%Y-%m-%d_%H.%M.%S')))
+                        fp.write('\nTracking started ' + str(time.strftime('%Y-%m-%d_%H.%M.%S')))
 
                     hour = int(time.strftime('%H'))
                     # print(type(hour))

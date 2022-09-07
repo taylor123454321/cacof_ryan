@@ -1,8 +1,9 @@
 import time
-#time.sleep(30)
+#time.sleep(300)
 
 import numpy as np
 import cv2
+import os
 
 #!/usr/bin/env python3
 
@@ -20,7 +21,21 @@ import time
 import threading
 
 # Set flag for only recoding at night
-time_flag = True # True enables recording at any time
+time_flag = False # True enables recording at any time
+
+# Set video length in seconds
+video_length = 20
+#video_length = 120
+
+path = r'video'
+#path = r'../home/pi/Documents/video'
+file_name = str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1.txt'))
+
+# Creating a file at specified folder
+# join directory and file path
+with open(os.path.join(path, file_name), 'w') as fp:
+    # uncomment below line if you want to create an empty file
+    fp.write('Program started and wrote this line')
 
 cap = cv2.VideoCapture(0)
 frame_width = int(cap.get(3))
@@ -38,17 +53,9 @@ def get_video_output(out = None):
     #return cv2.VideoWriter('../home/pi/Documents/video/static_comp_IR_' + str(time.strftime('%Y-%m-%d_%H.%M.%S_Turret1')) + '.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
 
 
-def catchall_tracking_signals_handler(what, confidence, region, tracking):
-    """print(
-        "What =  " + what,
-        confidence,
-        "% at ",
-        region[0], region[1], region[2], region[3],
-        " tracking?",
-        tracking,
-    )"""
+def catchall_tracking_signals_handler(what, confidence, region, tracking_status):
     global status
-    status = tracking
+    status = tracking_status
 
 
 # helper class to run dbus in background
@@ -85,7 +92,7 @@ if __name__ == "__main__":
 
     # just to keep program alive
     # replace with your code
-    next_time = time.time() + 10  # 20
+    next_time = time.time() + video_length
     out = get_video_output()
     status = 0
     
@@ -95,16 +102,16 @@ if __name__ == "__main__":
                 hour = int(time.strftime('%H'))
                 # print(type(hour))
                 # print(hour)
-                if hour > 18 or hour < 7 or time_flag == True:
+                if hour > 19 or hour < 6 or time_flag == True:
                     if time.time() > next_time and status == 1:
-                        next_time += 20
+                        next_time += video_length
                         out = get_video_output(out)
                         print("New video")
 
                     # Capture frame-by-frame
                     ret, frame = cap.read()
                     #print("status = ", status)
-                    if ret and status == 1: # Will it work?
+                    if ret and status == 1:
                         out.write(frame)
         except KeyboardInterrupt:
             cap.release()

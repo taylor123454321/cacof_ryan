@@ -117,4 +117,4 @@ if __name__ == "__main__":
             print("reached except")
             cap.release()
             cv2.destroyAllWindows()
-            break
+            sys.exit("End of program")

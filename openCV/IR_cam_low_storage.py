@@ -97,25 +97,28 @@ if __name__ == "__main__":
     status = 0
     
     while tracking.t.is_alive():
-        with open(os.path.join(path, file_name), 'a') as fp:
-            # uncomment below line if you want to create an empty file
-            fp.write('\nTracking started' + str(time.strftime('%Y-%m-%d_%H.%M.%S')))
         try:
             while True:
-                hour = int(time.strftime('%H'))
-                # print(type(hour))
-                # print(hour)
-                if hour > 19 or hour < 6 or time_flag == True:
-                    if time.time() > next_time and status == 1:
-                        next_time += video_length
-                        out = get_video_output(out)
-                        print("New video")
+                if status == 1:
+                    with open(os.path.join(path, file_name), 'a') as fp:
+                        # uncomment below line if you want to create an empty file
+                        fp.write('\nTracking started' + str(time.strftime('%Y-%m-%d_%H.%M.%S')))
 
-                    # Capture frame-by-frame
-                    ret, frame = cap.read()
-                    #print("status = ", status)
-                    if ret and status == 1:
-                        out.write(frame)
+                    hour = int(time.strftime('%H'))
+                    # print(type(hour))
+                    # print(hour)
+
+                    if hour > 19 or hour < 6 or time_flag == True:
+                        if time.time() > next_time:
+                            next_time += video_length
+                            out = get_video_output(out)
+                            print("New video")
+
+                        # Capture frame-by-frame
+                        ret, frame = cap.read()
+                        #print("status = ", status)
+                        if ret:
+                            out.write(frame)
         except KeyboardInterrupt:
             cap.release()
             cv2.destroyAllWindows()

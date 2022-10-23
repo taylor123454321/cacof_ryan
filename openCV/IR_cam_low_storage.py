@@ -110,7 +110,8 @@ if __name__ == "__main__":
 
                     if hour > 19 or hour < 6 or time_flag == True:
                         if time.time() > next_time:
-                            next_time += video_length
+                            # next_time += video_length
+                            next_time = time.time() + video_length
                             out = get_video_output(out)
                             print("New video")
 

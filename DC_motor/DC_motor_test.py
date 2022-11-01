@@ -15,7 +15,9 @@ pi = pigpio.pi()
 
 BIN1PIN = 19 # pin 35
 BIN2PIN = 20 # pin 38
-BPWMPIN = 21 # pin 40
+BPWMPIN = 13 # pin
+
+PWM_frequency = 2000
 
 pi.set_mode(BIN1PIN, pigpio.OUTPUT)
 pi.set_mode(BIN2PIN, pigpio.OUTPUT)
@@ -39,34 +41,45 @@ def rotate_set(direction, duty):
     print("Right")
     pi.write(BIN1PIN, 1)
     pi.write(BIN2PIN, 0)
-    pi.hardware_PWM(18, 800, duty*100000)
+    pi.hardware_PWM(BPWMPIN, PWM_frequency, duty*10000)
   elif direction == 1:
     print("Left")
     pi.write(BIN1PIN, 0)
     pi.write(BIN2PIN, 1)
-    pi.hardware_PWM(18, 800, duty*100000)
+    pi.hardware_PWM(BPWMPIN, PWM_frequency, duty*10000)
   else:
     print("Stopped")
     pi.write(BIN1PIN, 0)
     pi.write(BIN2PIN, 0)
-    pi.hardware_PWM(18, 800, 0)
+    pi.hardware_PWM(BPWMPIN, PWM_frequency, 0)
 
 
 
-delay = 2
+delay = 3
 try:
   while True:
+    rotate_set(0, 60)
+    time.sleep(delay)
+
+    rotate_set(1, 60)
+    time.sleep(delay)
+    
     rotate_set(0, 30)
     time.sleep(delay)
 
-    rotate_set(0, 60)
+    rotate_set(1, 30)
+    time.sleep(delay)
+    
+    rotate_set(0, 100)
+    time.sleep(delay)
+
+    rotate_set(1, 100)
     time.sleep(delay)
 
     rotate_set(2, 0)
     time.sleep(delay)
     print("end")
 except KeyboardInterrupt:
-  DC_PWM.stop()
-  GPIO.cleanup()
+  pi.stop()
   print("EXIT")
 
